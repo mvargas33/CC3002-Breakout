@@ -153,7 +153,7 @@ public class HomeworkTwoFacade {
      * @return the number of available balls
      */
     public int getBallsLeft() {
-        return 0;
+        return game.numberOfBalls();
     }
 
     /**
@@ -162,7 +162,8 @@ public class HomeworkTwoFacade {
      * @return the new number of available balls
      */
     public int dropBall() {
-        return 0;
+        game.deleteBall();
+        return game.numberOfBalls();
     }
 
     /**
