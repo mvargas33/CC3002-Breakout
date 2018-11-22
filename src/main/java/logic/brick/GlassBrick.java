@@ -1,30 +1,17 @@
 package logic.brick;
 
 import logic.level.AbstractLevel;
+import logic.visitor.Visitor;
 
 public class GlassBrick extends AbstractBrick {
 
     public GlassBrick(){
-        super(1, 10);
+        super(1, 50);
     }
 
     @Override
-    public void hit() {
-
+    public void accept(Visitor v) {
+        v.visitGlassBrick(this);
     }
 
-    @Override
-    public boolean isDestroyed() {
-        return false;
-    }
-
-    @Override
-    public int getScore() {
-        return 0;
-    }
-
-    @Override
-    public int remainingHits() {
-        return 0;
-    }
 }

@@ -22,15 +22,14 @@ public class Game implements Observer,Visitor{
     private int balls;
     private boolean winner;
     private boolean isGameOver;
-    private int currentLevel;
-    private ArrayList<Level> levels;
+    private Level currentLevel;
+    private int globalPoint;
 
     public Game(int balls) {
         this.balls = balls;
         this.winner = false;
         this.isGameOver = false;
-        this.levels = new ArrayList<>();this.levels.add(new NullLevel());
-        this.currentLevel = 0;
+        this.currentLevel = new NullLevel();
     }
 
     /**
@@ -56,16 +55,13 @@ public class Game implements Observer,Visitor{
         return this.balls;
     }
 
+    public int numberOfBricks(){
+        return this.currentLevel.getNumberOfBricks();
+    }
     @Override
     public void update(Observable observable, Object o) {
 
     }
-    public int numberOfBricks(){
-        Level currentLevel = levels.get(this.currentLevel);
-        return currentLevel.getNumberOfBricks();
-    }
-
-
 
     @Override
     public void visitNullLevel(NullLevel l) {

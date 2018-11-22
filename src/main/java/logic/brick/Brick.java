@@ -1,5 +1,9 @@
 package logic.brick;
 
+import logic.visitor.Visitable;
+
+import java.util.Observable;
+
 /**
  * Interface that represents a brick object.
  * <p>
@@ -7,7 +11,7 @@ package logic.brick;
  *
  * @author Juan-Pablo Silva
  */
-public interface Brick {
+public interface Brick extends Visitable{
     /**
      * Defines that a brick has been hit.
      * Implementations should consider the events that a hit to a brick can trigger.

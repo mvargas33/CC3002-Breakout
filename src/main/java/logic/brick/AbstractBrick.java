@@ -5,13 +5,15 @@ import logic.visitor.Visitor;
 import java.util.Observer;
 import java.util.Observable;
 
-public class AbstractBrick extends Observable implements Brick,Visitable {
+public abstract class AbstractBrick extends Observable implements Brick {
     private int lives;
     private int score;
+    private boolean isAlive;
 
     public AbstractBrick(int lives, int points){
         this.lives = lives;
         this.score = points;
+        this.isAlive = true;
     }
 
     /**
@@ -20,7 +22,10 @@ public class AbstractBrick extends Observable implements Brick,Visitable {
      */
     @Override
     public void hit() {
-
+        if(lives > 0) {
+            this.lives -= 1; return;
+        }
+        this.isAlive = false;
     }
 
     /**
@@ -30,7 +35,7 @@ public class AbstractBrick extends Observable implements Brick,Visitable {
      */
     @Override
     public boolean isDestroyed() {
-        return false;
+        return this.isAlive;
     }
 
     /**
@@ -40,7 +45,7 @@ public class AbstractBrick extends Observable implements Brick,Visitable {
      */
     @Override
     public int getScore() {
-        return 0;
+        return this.score;
     }
 
     /**
@@ -50,11 +55,7 @@ public class AbstractBrick extends Observable implements Brick,Visitable {
      */
     @Override
     public int remainingHits() {
-        return 0;
+        return this.lives;
     }
 
-    @Override
-    public void accept(Visitor v) {
-
-    }
 }

@@ -3,32 +3,44 @@ package logic.level;
 import logic.brick.Brick;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
+import logic.brick.GlassBrick;
+import logic.brick.MetalBrick;
+import logic.brick.WoodenBrick;
 import logic.visitor.*;
 
-public class AbstractLevel implements Level{
-    private String name;
-    private ArrayList<Brick> levelBricks;
-    private Level nextLevel;
+public abstract class AbstractLevel extends Observable implements Level{
     private int goalPoints;         // Puntos minimos para pasar (destruir madera y glass)
     private int obtainablePoins;    // Puntos máximos obtenidobles (destuir madera, galass, metal)
     private int currentPonts;       // Puntos actuales
+    private String name;
+    private ArrayList<Brick> levelBricks;
+    private Level nextLevel;
 
-    public AbstractLevel(String name){
-        this.name = name;
+
+    public AbstractLevel(){
+        this.goalPoints = 0;
+        this.obtainablePoins = 0;
         this.currentPonts = 0;
-
+        this.name = "";
+        this. levelBricks = new ArrayList<>();
     }
-    public int setGoalPoints(){
-        for(Brick b : this.levelBricks){
 
-        }
+    public void sumToGoalPoints(int points){
+        this.goalPoints += points;
     }
-    public int setObtainablePoints(){
-
+    public void sumToObtainablePoints(int points){
+        this.obtainablePoins += points;
     }
-    public int setLevelBricks(ArrayList<Brick> listaBricks){
+    public void sumToCurrentPoints(int points){
+        this.currentPonts += points;
+    }
+    public void setLevelBricks(ArrayList<Brick> listaBricks){
         this.levelBricks = listaBricks;
+    }
+    public void setName(String name){
+        this.name = name;
     }
 
     /**
@@ -71,7 +83,6 @@ public class AbstractLevel implements Level{
         return this.nextLevel;
     }
 
-
     /**
      * Gets the total number of points obtainable in level.
      *
@@ -79,8 +90,7 @@ public class AbstractLevel implements Level{
      */
     @Override
     public int getPoints() {
-
-        return 0;
+        return this.obtainablePoins;
     }
 
     /**
@@ -90,7 +100,8 @@ public class AbstractLevel implements Level{
      */
     @Override
     public Level addPlayingLevel(Level level) {
-        return null;
+        this.nextLevel = this.nextLevel.addPlayingLevel(level);
+        return this;
     }
 
     /**
@@ -100,6 +111,36 @@ public class AbstractLevel implements Level{
      */
     @Override
     public void setNextLevel(Level level) {
+        this.nextLevel = level;
+    }
+
+    @Override
+    public void accept(Visitor v) {
+
+    }
+
+    @Override
+    public void visitNullLevel(NullLevel l) {
+
+    }
+
+    @Override
+    public void visitRealLevel(RealLevel l) {
+
+    }
+
+    @Override
+    public void visitGlassBrick(GlassBrick b) {
+
+    }
+
+    @Override
+    public void visitMetalBrick(MetalBrick b) {
+
+    }
+
+    @Override
+    public void visitWoodenBrick(WoodenBrick b) {
 
     }
 }

@@ -1,31 +1,16 @@
 package logic.brick;
 
-public class WoodenBrick implements Brick {
-    private int lives;
-    private int points;
+import logic.visitor.Visitor;
+
+public class WoodenBrick extends AbstractBrick {
 
     public WoodenBrick(){
-        this.lives = 3;
-        this.points = 200;
+        super(3, 200);
     }
 
     @Override
-    public void hit() {
-
+    public void accept(Visitor v) {
+        v.visitWoodenBrick(this);
     }
 
-    @Override
-    public boolean isDestroyed() {
-        return false;
-    }
-
-    @Override
-    public int getScore() {
-        return 0;
-    }
-
-    @Override
-    public int remainingHits() {
-        return 0;
-    }
 }

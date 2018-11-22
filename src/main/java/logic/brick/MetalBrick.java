@@ -1,31 +1,16 @@
 package logic.brick;
 
-public class MetalBrick implements Brick{
-    private int lives;
-    private int points;
+import logic.visitor.Visitor;
+
+public class MetalBrick extends AbstractBrick{
 
     public MetalBrick(){
-        this.lives = 10;
-        this.points = 0;
+        super(10, 0);
     }
 
     @Override
-    public void hit() {
-
+    public void accept(Visitor v) {
+        v.visitMetalBrick(this);
     }
 
-    @Override
-    public boolean isDestroyed() {
-        return false;
-    }
-
-    @Override
-    public int getScore() {
-        return 0;
-    }
-
-    @Override
-    public int remainingHits() {
-        return 0;
-    }
 }
