@@ -1,6 +1,7 @@
 package controller;
 
 import logic.brick.*;
+import logic.level.AbstractLevel;
 import logic.level.Level;
 import logic.level.NullLevel;
 import logic.level.RealLevel;
@@ -74,6 +75,7 @@ public class Game implements Observer,Visitor{
     }
     public void setCurrentLevel(Level level){
         this.currentLevel = level;
+        ((AbstractLevel) level).addObserver(this);
     }
     @Override
     public void update(Observable observable, Object o) {

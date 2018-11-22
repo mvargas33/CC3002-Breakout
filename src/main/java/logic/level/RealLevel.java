@@ -22,10 +22,12 @@ public class RealLevel extends AbstractLevel {
                 GlassBrick glassBrick = new GlassBrick();
                 bricks.add(glassBrick);
                 super.sumToObtainablePoints(glassBrick.getScore());
+                glassBrick.addObserver(this);
             }else{
                 WoodenBrick woodenBrick = new WoodenBrick();
                 bricks.add(woodenBrick);
                 super.sumToObtainablePoints(woodenBrick.getScore());
+                woodenBrick.addObserver(this);
             }
         }
         for(int j = 0; j < numberOfBricks;j++){
@@ -33,6 +35,7 @@ public class RealLevel extends AbstractLevel {
             if(randomNumber < probOfMetal){
                 MetalBrick metalBrick = new MetalBrick();
                 bricks.add(metalBrick);
+                metalBrick.addObserver(this);
             }
         }
         super.setName(name);
@@ -50,10 +53,12 @@ public class RealLevel extends AbstractLevel {
                 GlassBrick glassBrick = new GlassBrick();
                 bricks.add(glassBrick);
                 super.sumToObtainablePoints(glassBrick.getScore());
+                glassBrick.addObserver(this);
             }else{
                 WoodenBrick woodenBrick = new WoodenBrick();
                 bricks.add(woodenBrick);
                 super.sumToObtainablePoints(woodenBrick.getScore());
+                woodenBrick.addObserver(this);
             }
         }
         super.setName(name);
