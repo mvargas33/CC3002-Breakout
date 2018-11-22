@@ -1,7 +1,11 @@
 package logic.visitor;
-
-import logic.ball.*;
+import logic.level.*;
+import logic.brick.*;
 
 public interface Visitor {
-    public boolean visitBallController(BallController ballController);
+    void visitNullLevel(NullLevel l);
+    void visitRealLevel(RealLevel l);
+    void visitGlassBrick(GlassBrick b);
+    void visitMetalBrick(MetalBrick b);
+    void visitWoodenBrick(WoodenBrick b);
 }

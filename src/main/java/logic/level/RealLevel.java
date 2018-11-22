@@ -5,11 +5,10 @@ import logic.brick.Brick;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RealLevel implements Level {
-    private ArrayList<Brick> levelBricks;
+public class RealLevel extends AbstractLevel {
 
-    public RealLevel(){
-        this.levelBricks = new ArrayList<>();
+    public RealLevel(String name, ArrayList<Brick> bricks){
+        super(name, bricks);
     }
 
     @Override

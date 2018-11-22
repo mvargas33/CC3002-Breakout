@@ -1,28 +1,36 @@
 package controller;
 
-import logic.ball.BallController;
-import logic.visitor.EmptyBallVisitor;
+import logic.brick.*;
+import logic.level.Level;
+import logic.level.NullLevel;
+import logic.level.RealLevel;
+import logic.visitor.*;
 
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
+
 /**
  * Game logic controller class.
  *
- * @author Juan-Pablo Silva
+ * @author Maximiliano Vargas
  */
-public class Game implements Observer{
-    private boolean winner = false;
-    private boolean isGameOver = false;
-    private BallController ballController;
-    private EmptyBallVisitor emptyBallVisitor;
+public class Game implements Observer,Visitor{
+    private int balls;
+    private boolean winner;
+    private boolean isGameOver;
+    private int currentLevel;
+    private ArrayList<Level> levels;
 
     public Game(int balls) {
-        this.ballController = new BallController();
-        ballController.addObserver(this);
-        this.emptyBallVisitor = new EmptyBallVisitor();
-        ballController.addBall(3);
-
-
+        this.balls = balls;
+        this.winner = false;
+        this.isGameOver = false;
+        this.levels = new ArrayList<>();this.levels.add(new NullLevel());
+        this.currentLevel = 0;
     }
 
     /**
@@ -37,24 +45,62 @@ public class Game implements Observer{
     }
 
     public void addBall(){
-        this.ballController.addBall(1);
+        this.balls += 1;
     }
 
     public void deleteBall(){
-        this.ballController.deleteBall();
+        this.balls -= 1;
     }
 
     public int numberOfBalls(){
-        return this.ballController.getNumberOfBalls();
+        return this.balls;
     }
 
     @Override
     public void update(Observable observable, Object o) {
-        if( o instanceof BallController){
-            boolean isEmpty = ((BallController) o).accept(this.emptyBallVisitor);
-            if(isEmpty) {
-                this.winner = false;
+
+    }
+    public int numberOfBricks(){
+        Level currentLevel = levels.get(this.currentLevel);
+        return currentLevel.getNumberOfBricks();
+    }
+
+    public Level newLevelWithBricksNoMetal(String name, int numberOfBricks, double probOfGlass, int seed){
+        ArrayList<Brick> bricks = new ArrayList<Brick>();
+        Random randomObject = new Random(seed);
+        for(int i = 0;i < numberOfBricks;i++){
+            double randomNumber = randomObject.nextDouble();
+            if(randomNumber < probOfGlass){
+                bricks.add(new GlassBrick());
+            }else{
+                bricks.add(new WoodenBrick());
             }
         }
+        return new RealLevel(name, bricks);
+    }
+
+    @Override
+    public void visitNullLevel(NullLevel l) {
+
+    }
+
+    @Override
+    public void visitRealLevel(RealLevel l) {
+
+    }
+
+    @Override
+    public void visitGlassBrick(GlassBrick b) {
+
+    }
+
+    @Override
+    public void visitMetalBrick(MetalBrick b) {
+
+    }
+
+    @Override
+    public void visitWoodenBrick(WoodenBrick b) {
+
     }
 }

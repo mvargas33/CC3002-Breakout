@@ -72,4 +72,5 @@ public interface Level {
      * @param level the next level of a level object
      */
     void setNextLevel(Level level);
+
 }
