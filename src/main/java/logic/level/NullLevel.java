@@ -11,6 +11,7 @@ public class NullLevel extends AbstractLevel{
 
     public NullLevel(){
         super();
+        super.setNextLevel(this);
     }
 
     /**

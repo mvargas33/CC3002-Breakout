@@ -139,6 +139,7 @@ public abstract class AbstractLevel extends Observable implements Level{
     @Override
     public void visitMetalBrick(MetalBrick b) {
         this.currentPonts += b.getScore();
+        setChanged();
         notifyObservers();  // Notifica a Game que un metal se destruyó
     }
 

@@ -50,9 +50,10 @@ public class Game implements Observer,Visitor{
     }
 
     public void deleteBall(){
-        this.balls -= 1;
-        if(balls == 0){
-            this.isGameOver = true;
+        if(balls > 0){
+            this.balls -= 1;
+            if(balls == 0)
+                this.isGameOver = true;
         }
     }
 
@@ -80,7 +81,11 @@ public class Game implements Observer,Visitor{
     @Override
     public void update(Observable observable, Object o) {
         if (observable instanceof RealLevel){
-            this.balls += 1;
+            if(((RealLevel) observable).getPoints() == ((RealLevel) observable).getObtainablePoints()){
+                this.goToNextLevel();
+                return;
+            }
+            this.addBall();
         }
 
     }

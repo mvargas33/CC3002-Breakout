@@ -23,10 +23,13 @@ public abstract class AbstractBrick extends Observable implements Brick {
     @Override
     public void hit() {
         if(lives > 0) {
-            this.lives -= 1; return;
+            this.lives -= 1;
+            if(lives == 0) {
+                this.isAlive = false;
+                setChanged();
+                notifyObservers();
+            }
         }
-        this.isAlive = false;
-        notifyObservers();
     }
 
     /**
@@ -36,7 +39,7 @@ public abstract class AbstractBrick extends Observable implements Brick {
      */
     @Override
     public boolean isDestroyed() {
-        return this.isAlive;
+        return !this.isAlive;
     }
 
     /**

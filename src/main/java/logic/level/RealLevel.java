@@ -40,6 +40,7 @@ public class RealLevel extends AbstractLevel {
         }
         super.setName(name);
         super.setLevelBricks(bricks);
+        super.setNextLevel(new NullLevel());
     }
 
 
@@ -63,6 +64,7 @@ public class RealLevel extends AbstractLevel {
         }
         super.setName(name);
         super.setLevelBricks(bricks);
+        super.setNextLevel(new NullLevel());
     }
 
     /**
