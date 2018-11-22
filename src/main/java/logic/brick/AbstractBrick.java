@@ -26,6 +26,7 @@ public abstract class AbstractBrick extends Observable implements Brick {
             this.lives -= 1; return;
         }
         this.isAlive = false;
+        notifyObservers();
     }
 
     /**

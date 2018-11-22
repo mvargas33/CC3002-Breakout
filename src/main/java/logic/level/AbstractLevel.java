@@ -11,8 +11,7 @@ import logic.brick.WoodenBrick;
 import logic.visitor.*;
 
 public abstract class AbstractLevel extends Observable implements Level{
-    private int goalPoints;         // Puntos minimos para pasar (destruir madera y glass)
-    private int obtainablePoins;    // Puntos máximos obtenidobles (destuir madera, galass, metal)
+    private int obtainablePoins;    // Puntos máximos obtenidobles (destuir madera, galass)
     private int currentPonts;       // Puntos actuales
     private String name;
     private ArrayList<Brick> levelBricks;
@@ -20,16 +19,12 @@ public abstract class AbstractLevel extends Observable implements Level{
 
 
     public AbstractLevel(){
-        this.goalPoints = 0;
         this.obtainablePoins = 0;
         this.currentPonts = 0;
         this.name = "";
         this. levelBricks = new ArrayList<>();
     }
 
-    public void sumToGoalPoints(int points){
-        this.goalPoints += points;
-    }
     public void sumToObtainablePoints(int points){
         this.obtainablePoins += points;
     }
@@ -121,26 +116,32 @@ public abstract class AbstractLevel extends Observable implements Level{
 
     @Override
     public void visitNullLevel(NullLevel l) {
-
     }
 
     @Override
     public void visitRealLevel(RealLevel l) {
-
     }
 
     @Override
     public void visitGlassBrick(GlassBrick b) {
-
+        this.currentPonts += b.getScore();
     }
 
     @Override
     public void visitMetalBrick(MetalBrick b) {
-
+        this.currentPonts += b.getScore();
+        notifyObservers();  // Notifica a Game que un metal se destruyó
     }
 
     @Override
     public void visitWoodenBrick(WoodenBrick b) {
+        this.currentPonts += b.getScore();
+    }
 
+    @Override
+    public void update(Observable observable, Object o) {
+        if( observable instanceof Brick){
+            ((Brick) observable).accept(this);
+        }
     }
 }
