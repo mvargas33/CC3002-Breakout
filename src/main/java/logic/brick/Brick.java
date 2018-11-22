@@ -38,4 +38,5 @@ public interface Brick extends Visitable{
      * @return the remaining hits to destroy de brick
      */
     int remainingHits();
+
 }

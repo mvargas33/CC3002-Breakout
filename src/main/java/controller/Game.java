@@ -23,13 +23,14 @@ public class Game implements Observer,Visitor{
     private boolean winner;
     private boolean isGameOver;
     private Level currentLevel;
-    private int globalPoint;
+    private int globalPoints;
 
     public Game(int balls) {
         this.balls = balls;
         this.winner = false;
         this.isGameOver = false;
         this.currentLevel = new NullLevel();
+        this.globalPoints = 0;
     }
 
     /**
@@ -49,17 +50,36 @@ public class Game implements Observer,Visitor{
 
     public void deleteBall(){
         this.balls -= 1;
+        if(balls == 0){
+            this.isGameOver = true;
+        }
     }
 
     public int numberOfBalls(){
         return this.balls;
     }
 
-    public int numberOfBricks(){
-        return this.currentLevel.getNumberOfBricks();
+    public Level getCurrentLevel(){
+        return this.currentLevel;
+    }
+    public void goToNextLevel(){
+        this.globalPoints += currentLevel.getPoints();
+        currentLevel = currentLevel.getNextLevel();
+    }
+    public int getGlobalPoints(){
+        return this.globalPoints + this.getCurrentLevel().getPoints();
+    }
+    public boolean isGameOver(){
+        return this.isGameOver;
+    }
+    public void setCurrentLevel(Level level){
+        this.currentLevel = level;
     }
     @Override
     public void update(Observable observable, Object o) {
+        if (observable instanceof RealLevel){
+            this.balls += 1;
+        }
 
     }
 

@@ -55,7 +55,7 @@ public class HomeworkTwoFacade {
      * @return the number of intact bricks in the current level
      */
     public int numberOfBricks() {
-        return game.numberOfBricks();
+        return game.getCurrentLevel().getNumberOfBricks();
     }
 
     /**
@@ -64,7 +64,7 @@ public class HomeworkTwoFacade {
      * @return the list of bricks
      */
     public List<Brick> getBricks() {
-        return null;
+        return game.getCurrentLevel().getBricks();
     }
 
     /**
@@ -73,14 +73,14 @@ public class HomeworkTwoFacade {
      * @return true if the current level's next level is playable, false otherwise
      */
     public boolean hasNextLevel() {
-        return false;
+        return game.getCurrentLevel().hasNextLevel();
     }
 
     /**
      * Pass to the next level of the current {@link Level}. Ignores all conditions and skip to the next level.
      */
     public void goNextLevel() {
-
+        game.goToNextLevel();
     }
 
     /**
@@ -89,7 +89,7 @@ public class HomeworkTwoFacade {
      * @return true if the current level is playable, false otherwise
      */
     public boolean hasCurrentLevel() {
-        return false;
+        return game.getCurrentLevel().isPlayableLevel();
     }
 
     /**
@@ -98,7 +98,7 @@ public class HomeworkTwoFacade {
      * @return the name of the current level
      */
     public String getLevelName() {
-        return null;
+        return game.getCurrentLevel().getName();
     }
 
     /**
@@ -108,7 +108,7 @@ public class HomeworkTwoFacade {
      * @see Level
      */
     public Level getCurrentLevel() {
-        return null;
+        return game.getCurrentLevel();
     }
 
     /**
@@ -118,7 +118,7 @@ public class HomeworkTwoFacade {
      * @see Level
      */
     public void setCurrentLevel(Level level) {
-
+        game.setCurrentLevel(level);
     }
 
     /**
@@ -127,7 +127,7 @@ public class HomeworkTwoFacade {
      * @param level the level to be added
      */
     public void addPlayingLevel(Level level) {
-
+        game.getCurrentLevel().addPlayingLevel(level);
     }
 
     /**
@@ -136,7 +136,7 @@ public class HomeworkTwoFacade {
      * @return the number of points in the current level
      */
     public int getLevelPoints() {
-        return 0;
+        return game.getCurrentLevel().getObtainablePoints() - game.getCurrentLevel().getPoints();
     }
 
     /**
@@ -145,7 +145,7 @@ public class HomeworkTwoFacade {
      * @return the cumulative points
      */
     public int getCurrentPoints() {
-        return 0;
+        return game.getGlobalPoints();
     }
 
     /**
@@ -173,7 +173,7 @@ public class HomeworkTwoFacade {
      * @return true if the game is over, false otherwise
      */
     public boolean isGameOver() {
-        return false;
+        return game.isGameOver();
     }
 
     /**

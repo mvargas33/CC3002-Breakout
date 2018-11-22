@@ -37,6 +37,10 @@ public abstract class AbstractLevel extends Observable implements Level{
     public void setName(String name){
         this.name = name;
     }
+    @Override
+    public int getObtainablePoints(){
+        return this.obtainablePoins;
+    }
 
     /**
      * Gets the level's name. Each level must have a name.
@@ -55,7 +59,12 @@ public abstract class AbstractLevel extends Observable implements Level{
      */
     @Override
     public int getNumberOfBricks() {
-        return this.levelBricks.size();
+        int n = 0;
+        for(Brick b : this.levelBricks){    // ONLY BRICKS ALIVE!
+            if(!b.isDestroyed())
+                n +=1;
+        }
+        return n;
     }
 
     /**
