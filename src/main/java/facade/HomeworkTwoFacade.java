@@ -3,6 +3,7 @@ package facade;
 import controller.Game;
 import logic.brick.Brick;
 import logic.level.Level;
+import logic.level.RealLevel;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class HomeworkTwoFacade {
      * @see Level
      */
     public Level newLevelWithBricksFull(String name, int numberOfBricks, double probOfGlass, double probOfMetal, int seed) {
-        return null;
+        return new RealLevel(name, numberOfBricks, probOfGlass, probOfMetal, seed);
     }
 
     /**
@@ -45,7 +46,7 @@ public class HomeworkTwoFacade {
      * @see Level
      */
     public Level newLevelWithBricksNoMetal(String name, int numberOfBricks, double probOfGlass, int seed) {
-        return this.game.newLevelWithBricksNoMetal(name, numberOfBricks, probOfGlass, seed);
+        return new RealLevel(name, numberOfBricks, probOfGlass, seed);
     }
 
     /**

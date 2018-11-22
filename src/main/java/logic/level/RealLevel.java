@@ -1,58 +1,70 @@
 package logic.level;
 
 import logic.brick.Brick;
+import logic.brick.GlassBrick;
+import logic.brick.MetalBrick;
+import logic.brick.WoodenBrick;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class RealLevel extends AbstractLevel {
 
-    public RealLevel(String name, ArrayList<Brick> bricks){
-        super(name, bricks);
+    public RealLevel(String name, int numberOfBricks, double probOfGlass, double probOfMetal, int seed) {
+        super(name);
+        ArrayList<Brick> bricks = new ArrayList<Brick>();
+        Random randomObject = new Random(seed);
+        for(int i = 0;i < numberOfBricks;i++){
+            double randomNumber = randomObject.nextDouble();
+            if(randomNumber < probOfGlass){
+                bricks.add(new GlassBrick());
+            }else{
+                bricks.add(new WoodenBrick());
+            }
+        }
+        for(int j = 0; j < numberOfBricks;j++){
+            double randomNumber = randomObject.nextDouble();
+            if(randomNumber < probOfMetal){
+                bricks.add(new MetalBrick());
+            }
+        }
+        super.setLevelBricks(bricks);
     }
 
-    @Override
-    public String getName() {
-        return null;
+
+    public RealLevel(String name, int numberOfBricks, double probOfGlass, int seed){
+        super(name);
+        ArrayList<Brick> bricks = new ArrayList<Brick>();
+        Random randomObject = new Random(seed);
+        for(int i = 0;i < numberOfBricks;i++){
+            double randomNumber = randomObject.nextDouble();
+            if(randomNumber < probOfGlass){
+                bricks.add(new GlassBrick());
+            }else{
+                bricks.add(new WoodenBrick());
+            }
+        }
+        super.setLevelBricks(bricks);
     }
 
-    @Override
-    public int getNumberOfBricks() {
-        return 0;
-    }
-
-    @Override
-    public List<Brick> getBricks() {
-        return null;
-    }
-
-    @Override
-    public Level getNextLevel() {
-        return null;
-    }
-
+    /**
+     * Gets whether the level is playable or not.
+     *
+     * @return true if the level is playable, false otherwise
+     */
     @Override
     public boolean isPlayableLevel() {
         return true;
     }
 
+    /**
+     * Whether the level's next level is playable or not.
+     *
+     * @return true if the level's next level is playable, false otherwise
+     */
     @Override
     public boolean hasNextLevel() {
-        return false;
-    }
-
-    @Override
-    public int getPoints() {
-        return 0;
-    }
-
-    @Override
-    public Level addPlayingLevel(Level level) {
-        return null;
-    }
-
-    @Override
-    public void setNextLevel(Level level) {
-
+        return super.getNextLevel().isPlayableLevel();
     }
 }

@@ -1,12 +1,11 @@
 package logic.brick;
 
-public class GlassBrick implements Brick{
-    private int lives;
-    private int points;
+import logic.level.AbstractLevel;
+
+public class GlassBrick extends AbstractBrick {
 
     public GlassBrick(){
-        this.lives = 1;
-        this.points = 50;
+        super(1, 10);
     }
 
     @Override

@@ -65,19 +65,7 @@ public class Game implements Observer,Visitor{
         return currentLevel.getNumberOfBricks();
     }
 
-    public Level newLevelWithBricksNoMetal(String name, int numberOfBricks, double probOfGlass, int seed){
-        ArrayList<Brick> bricks = new ArrayList<Brick>();
-        Random randomObject = new Random(seed);
-        for(int i = 0;i < numberOfBricks;i++){
-            double randomNumber = randomObject.nextDouble();
-            if(randomNumber < probOfGlass){
-                bricks.add(new GlassBrick());
-            }else{
-                bricks.add(new WoodenBrick());
-            }
-        }
-        return new RealLevel(name, bricks);
-    }
+
 
     @Override
     public void visitNullLevel(NullLevel l) {

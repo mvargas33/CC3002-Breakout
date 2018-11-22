@@ -1,53 +1,36 @@
 package logic.level;
 
+import logic.brick.AbstractBrick;
 import logic.brick.Brick;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class NullLevel implements Level {
+public class NullLevel extends AbstractLevel{
 
-    @Override
-    public String getName() {
-        return null;
+    public NullLevel(){
+        super("");
+        super.setLevelBricks(new ArrayList<>());
     }
 
-    @Override
-    public int getNumberOfBricks() {
-        return 0;
-    }
-
-    @Override
-    public List<Brick> getBricks() {
-        return null;
-    }
-
-    @Override
-    public Level getNextLevel() {
-        return null;
-    }
-
+    /**
+     * Gets whether the level is playable or not.
+     *
+     * @return true if the level is playable, false otherwise
+     */
     @Override
     public boolean isPlayableLevel() {
         return false;
     }
 
+    /**
+     * Whether the level's next level is playable or not.
+     *
+     * @return true if the level's next level is playable, false otherwise
+     */
     @Override
     public boolean hasNextLevel() {
         return false;
     }
 
-    @Override
-    public int getPoints() {
-        return 0;
-    }
-
-    @Override
-    public Level addPlayingLevel(Level level) {
-        return null;
-    }
-
-    @Override
-    public void setNextLevel(Level level) {
-
-    }
 }
