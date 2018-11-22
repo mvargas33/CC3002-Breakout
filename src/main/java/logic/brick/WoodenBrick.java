@@ -1,12 +1,12 @@
 package logic.brick;
 
-public class GlassBrick implements Brick{
+public class WoodenBrick implements Brick {
     private int lives;
     private int points;
 
-    public GlassBrick(){
-        this.lives = 1;
-        this.points = 50;
+    public WoodenBrick(){
+        this.lives = 3;
+        this.points = 200;
     }
 
     @Override
