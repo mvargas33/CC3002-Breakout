@@ -87,10 +87,4 @@ public class RealLevel extends AbstractLevel {
         return super.getNextLevel().isPlayableLevel();
     }
 
-
-
-    @Override
-    public void accept(Visitor v) {
-        v.visitRealLevel(this);
-    }
 }
