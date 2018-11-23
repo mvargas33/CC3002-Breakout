@@ -16,6 +16,7 @@ public abstract class AbstractLevel extends Observable implements Level{
     private String name;
     private ArrayList<Brick> levelBricks;
     private Level nextLevel;
+    private boolean lastBrickWasMetal;
 
 
     public AbstractLevel(){
@@ -23,6 +24,7 @@ public abstract class AbstractLevel extends Observable implements Level{
         this.currentPonts = 0;
         this.name = "";
         this. levelBricks = new ArrayList<>();
+        this.lastBrickWasMetal = false;
     }
 
     public void sumToObtainablePoints(int points){
@@ -37,9 +39,12 @@ public abstract class AbstractLevel extends Observable implements Level{
     public void setName(String name){
         this.name = name;
     }
-    @Override
-    public int getObtainablePoints(){
-        return this.obtainablePoins;
+
+    public boolean isLastBrickMetal(){
+        return this.lastBrickWasMetal;
+    }
+    public void setLastBrickWasMetal(boolean valor){
+        this.lastBrickWasMetal = valor;
     }
 
     /**
@@ -97,6 +102,11 @@ public abstract class AbstractLevel extends Observable implements Level{
         return this.obtainablePoins;
     }
 
+    @Override
+    public int getCurrentPoints() {
+        return this.currentPonts;
+    }
+
     /**
      * Adds a level to the list of levels. This adds the level in the last position of the list.
      *
@@ -134,18 +144,23 @@ public abstract class AbstractLevel extends Observable implements Level{
     @Override
     public void visitGlassBrick(GlassBrick b) {
         this.currentPonts += b.getScore();
+        setChanged();
+        notifyObservers();  // Notifica a Game que un brick se destruyó
     }
 
     @Override
     public void visitMetalBrick(MetalBrick b) {
         this.currentPonts += b.getScore();
+        this.lastBrickWasMetal = true;
         setChanged();
-        notifyObservers();  // Notifica a Game que un metal se destruyó
+        notifyObservers();  // Notifica a Game que un brick se destruyó
     }
 
     @Override
     public void visitWoodenBrick(WoodenBrick b) {
         this.currentPonts += b.getScore();
+        setChanged();
+        notifyObservers();  // Notifica a Game que un brick se destruyó
     }
 
     @Override

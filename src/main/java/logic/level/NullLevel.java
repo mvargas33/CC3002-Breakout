@@ -44,6 +44,8 @@ public class NullLevel extends AbstractLevel{
         return level;
     }
 
+
+
     @Override
     public void accept(Visitor v) {
         v.visitNullLevel(this);

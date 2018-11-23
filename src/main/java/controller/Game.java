@@ -66,10 +66,10 @@ public class Game implements Observer,Visitor{
     }
     public void goToNextLevel(){
         this.globalPoints += currentLevel.getPoints();
-        currentLevel = currentLevel.getNextLevel();
+        setCurrentLevel(currentLevel.getNextLevel());
     }
     public int getGlobalPoints(){
-        return this.globalPoints + this.getCurrentLevel().getPoints();
+        return this.globalPoints + this.getCurrentLevel().getCurrentPoints();
     }
     public boolean isGameOver(){
         return this.isGameOver;
@@ -81,11 +81,17 @@ public class Game implements Observer,Visitor{
     @Override
     public void update(Observable observable, Object o) {
         if (observable instanceof RealLevel){
-            if(((RealLevel) observable).getPoints() == ((RealLevel) observable).getObtainablePoints()){
+            if(((RealLevel) observable).getCurrentPoints() == ((RealLevel) observable).getPoints()){
+                if(!currentLevel.getNextLevel().isPlayableLevel()) {
+                    this.winner = true;
+                }
                 this.goToNextLevel();
                 return;
             }
-            this.addBall();
+            if(((RealLevel) observable).isLastBrickMetal()) {
+                ((RealLevel) observable).setLastBrickWasMetal(false);
+                this.addBall();
+            }
         }
 
     }

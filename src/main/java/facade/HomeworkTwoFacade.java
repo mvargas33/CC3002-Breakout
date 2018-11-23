@@ -136,7 +136,7 @@ public class HomeworkTwoFacade {
      * @return the number of points in the current level
      */
     public int getLevelPoints() {
-        return game.getCurrentLevel().getObtainablePoints();
+        return game.getCurrentLevel().getPoints();
     }
 
     /**

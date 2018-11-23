@@ -75,6 +75,6 @@ public interface Level extends Visitable,Visitor,Observer {
      */
     void setNextLevel(Level level);
 
-    int getObtainablePoints();
+    int getCurrentPoints();
 
 }
