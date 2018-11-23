@@ -11,7 +11,7 @@ import java.util.Observer;
  *
  * @author Juan-Pablo Silva
  */
-public interface Level extends Visitable,Visitor,Observer {
+public interface Level extends Visitor,Observer {
     /**
      * Gets the level's name. Each level must have a name.
      *

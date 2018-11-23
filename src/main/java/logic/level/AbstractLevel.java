@@ -129,19 +129,6 @@ public abstract class AbstractLevel extends Observable implements Level{
     }
 
     @Override
-    public void accept(Visitor v) {
-
-    }
-
-    @Override
-    public void visitNullLevel(NullLevel l) {
-    }
-
-    @Override
-    public void visitRealLevel(RealLevel l) {
-    }
-
-    @Override
     public void visitGlassBrick(GlassBrick b) {
         this.currentPonts += b.getScore();
         setChanged();

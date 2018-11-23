@@ -19,7 +19,7 @@ import java.util.Random;
  *
  * @author Maximiliano Vargas
  */
-public class Game implements Observer,Visitor{
+public class Game implements Observer{
     private int balls;
     private boolean winner;
     private boolean isGameOver;
@@ -96,28 +96,4 @@ public class Game implements Observer,Visitor{
 
     }
 
-    @Override
-    public void visitNullLevel(NullLevel l) {
-
-    }
-
-    @Override
-    public void visitRealLevel(RealLevel l) {
-
-    }
-
-    @Override
-    public void visitGlassBrick(GlassBrick b) {
-
-    }
-
-    @Override
-    public void visitMetalBrick(MetalBrick b) {
-
-    }
-
-    @Override
-    public void visitWoodenBrick(WoodenBrick b) {
-
-    }
 }
