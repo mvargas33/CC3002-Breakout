@@ -65,7 +65,6 @@ public class Game implements Observer{
         return this.currentLevel;
     }
     public void goToNextLevel(){
-        this.globalPoints += currentLevel.getPoints();
         setCurrentLevel(currentLevel.getNextLevel());
     }
     public int getGlobalPoints(){
@@ -75,6 +74,7 @@ public class Game implements Observer{
         return this.isGameOver;
     }
     public void setCurrentLevel(Level level){
+        this.globalPoints += currentLevel.getCurrentPoints();
         this.currentLevel = level;
         ((AbstractLevel) level).addObserver(this);
     }
@@ -83,7 +83,8 @@ public class Game implements Observer{
         if (observable instanceof RealLevel){
             if(((RealLevel) observable).getCurrentPoints() == ((RealLevel) observable).getPoints()){
                 if(!currentLevel.getNextLevel().isPlayableLevel()) {
-                    this.winner = true;
+                    this.winner = true;     // Hay ganador
+                    this.isGameOver = true; // Termina el juego
                 }
                 this.goToNextLevel();
                 return;

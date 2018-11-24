@@ -130,14 +130,14 @@ public abstract class AbstractLevel extends Observable implements Level{
 
     @Override
     public void visitGlassBrick(GlassBrick b) {
-        this.currentPonts += b.getScore();
+        sumToCurrentPoints(b.getScore());
         setChanged();
         notifyObservers();  // Notifica a Game que un brick se destruyó
     }
 
     @Override
     public void visitMetalBrick(MetalBrick b) {
-        this.currentPonts += b.getScore();
+        sumToCurrentPoints(b.getScore());
         this.lastBrickWasMetal = true;
         setChanged();
         notifyObservers();  // Notifica a Game que un brick se destruyó
@@ -145,7 +145,7 @@ public abstract class AbstractLevel extends Observable implements Level{
 
     @Override
     public void visitWoodenBrick(WoodenBrick b) {
-        this.currentPonts += b.getScore();
+        sumToCurrentPoints(b.getScore());
         setChanged();
         notifyObservers();  // Notifica a Game que un brick se destruyó
     }
