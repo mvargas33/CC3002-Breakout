@@ -2,8 +2,6 @@ package logic.brick;
 
 import logic.visitor.Visitable;
 
-import java.util.Observable;
-
 /**
  * Interface that represents a brick object.
  * <p>

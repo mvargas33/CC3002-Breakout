@@ -1,24 +1,32 @@
 package logic.level;
 
-import logic.brick.Brick;
+import logic.brick.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import logic.brick.GlassBrick;
-import logic.brick.MetalBrick;
-import logic.brick.WoodenBrick;
-import logic.visitor.*;
-
+/**
+ * Clase AbstractLevel: Se implementan los métodos comunes entre NullLevel y RealLevel.
+ * AbstractLevel observa a los Bricks de su nivel, implementa update().
+ * Esto corresponde al 'Observer Pattern' visto en clases.
+ * AbstractLevel es observado por Game. Utiliza métodos de Observable.
+ * AbstractLevel visita Bricks. Implementa métodos definidos en Visitor.
+ *
+ * @author Maximiliano Vargas
+ */
 public abstract class AbstractLevel extends Observable implements Level{
-    private int obtainablePoins;    // Puntos máximos obtenidobles (destuir madera, galass)
-    private int currentPonts;       // Puntos actuales
-    private String name;
-    private ArrayList<Brick> levelBricks;
-    private Level nextLevel;
-    private boolean lastBrickWasMetal;
+    private int obtainablePoins;            // Puntos máximos obtenidobles (destuir wooden, glass)
+    private int currentPonts;               // Puntos actuales ganados
+    private String name;                    // Nombre del nivel
+    private ArrayList<Brick> levelBricks;   // Lista de Bricks del nivel actual
+    private Level nextLevel;                // Nivel siguiente
+    private boolean lastBrickWasMetal;      // Valor booleano: Dice si el último Brick destuido fue de metal (necesario para el notify level->game)
 
-
+    /**
+     * Constructor abstracto por default: Crea un nivel vacío
+     * No se especifíca el parámetro 'nextLevel' ya que en los constructores de todas las clases hijos se especifíca
+     */
     public AbstractLevel(){
         this.obtainablePoins = 0;
         this.currentPonts = 0;
@@ -27,24 +35,66 @@ public abstract class AbstractLevel extends Observable implements Level{
         this.lastBrickWasMetal = false;
     }
 
+    /**
+     * Suma a 'obtainablePoins' los puntos específicados.
+     * Utilizado en el constructor de RealLevel.
+     * @param points: puntos a sumar
+     */
     public void sumToObtainablePoints(int points){
         this.obtainablePoins += points;
     }
+
+    /**
+     * Suma a 'currentPonts' los puntos específicados.
+     * Utilizado al destruirse un bloque en las visitas a los bloques.
+     * @param points: puntos a sumar
+     */
     public void sumToCurrentPoints(int points){
         this.currentPonts += points;
     }
+
+    /**
+     * Impone la lista de Bricks sobre el nivel
+     * @param listaBricks: lista de Bricks a imponer
+     */
     public void setLevelBricks(ArrayList<Brick> listaBricks){
         this.levelBricks = listaBricks;
     }
+
+    /**
+     * Impone el nombre a utilizar por un Nivel
+     * @param name: nombre a imponer
+     */
     public void setName(String name){
         this.name = name;
     }
 
+    /**
+     * Retorna true si el último Brick destruido en el nivel fue de metal.
+     * Utilizado en la notificación de Level a Game para ver condición de bolas extra
+     * @return variable 'lastBrickWasMetal' del nivel
+     */
     public boolean isLastBrickMetal(){
         return this.lastBrickWasMetal;
     }
+
+    /**
+     * Declara con 'valor' la variable 'lastBrickWasMetal' que guarda si el último birck destruido fue de metal.
+     * @param valor: valor a setear 'lastBrickWasMetal'
+     */
     public void setLastBrickWasMetal(boolean valor){
         this.lastBrickWasMetal = valor;
+    }
+
+    /**
+     * Retorna los puntos ganados en un nivel y sólo los de ese nivel.
+     * Siempre menor o igual a los obtenibles. Los que calcula getPoints()
+     *
+     * @return los puntos ganados hasta el momento en un nivel.
+     */
+    @Override
+    public int getCurrentPoints() {
+        return this.currentPonts;
     }
 
     /**
@@ -102,11 +152,6 @@ public abstract class AbstractLevel extends Observable implements Level{
         return this.obtainablePoins;
     }
 
-    @Override
-    public int getCurrentPoints() {
-        return this.currentPonts;
-    }
-
     /**
      * Adds a level to the list of levels. This adds the level in the last position of the list.
      *
@@ -128,28 +173,55 @@ public abstract class AbstractLevel extends Observable implements Level{
         this.nextLevel = level;
     }
 
+    /**
+     * Al visitar un brick de glass suma los puntos al nivel.
+     * Notifica a Game sólo si el juego está ganado
+     * @param b: GlassBrick a visitar
+     */
     @Override
     public void visitGlassBrick(GlassBrick b) {
         sumToCurrentPoints(b.getScore());
-        setChanged();
-        notifyObservers();  // Notifica a Game que un brick se destruyó
+        if(this.currentPonts == this.obtainablePoins) { // Condición para pasar de nivel
+            setChanged();
+            notifyObservers();  // Notifica a Game que un brick se destruyó
+        }
     }
 
+    /**
+     * Al visitar, Suma los puntos de metal a Level (0, pero se hace así para que sea escalable).
+     * Cambia la variable 'lastBrickWasMetal' por true.
+     * Notifica siempre a Game.
+     * @param b: MetalBrick a visitar
+     */
     @Override
     public void visitMetalBrick(MetalBrick b) {
         sumToCurrentPoints(b.getScore());
-        this.lastBrickWasMetal = true;
+        setLastBrickWasMetal(true);
         setChanged();
         notifyObservers();  // Notifica a Game que un brick se destruyó
     }
 
+    /**
+     * Al visitar un brick de wooden suma los puntos al nivel.
+     * Notifica a Game sólo si el juego está ganado
+     * @param b: WoodenBrick a visitar
+     */
     @Override
     public void visitWoodenBrick(WoodenBrick b) {
         sumToCurrentPoints(b.getScore());
-        setChanged();
-        notifyObservers();  // Notifica a Game que un brick se destruyó
+        if(this.currentPonts == this.obtainablePoins) { // Condición para pasar de nivel
+            setChanged();
+            notifyObservers();  // Notifica a Game que un brick se destruyó
+        }
     }
 
+    /**
+     * Método que se ejecuta cuando un Brick notifica a Level.
+     * Brick sólo notifica cuando ha sido destruido.
+     * Luego level Visita a Brick para saber el tipo.
+     * @param observable Brick que notifica a Level
+     * @param o Objeto que envía Brick (null para efectos del juego)
+     */
     @Override
     public void update(Observable observable, Object o) {
         if( observable instanceof Brick){

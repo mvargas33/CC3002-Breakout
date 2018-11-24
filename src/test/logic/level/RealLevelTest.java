@@ -1,15 +1,13 @@
 package logic.level;
 
-import logic.brick.Brick;
-import logic.brick.GlassBrick;
-import logic.brick.WoodenBrick;
+import logic.brick.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 public class RealLevelTest {
     private Level glassLevel;

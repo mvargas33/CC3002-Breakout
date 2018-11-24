@@ -1,17 +1,22 @@
 package logic.level;
 
-import logic.brick.Brick;
-import logic.brick.GlassBrick;
-import logic.brick.MetalBrick;
-import logic.brick.WoodenBrick;
-import logic.visitor.Visitor;
+import logic.brick.*;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class RealLevel extends AbstractLevel {
-
+    /**
+     * Constructor de un RealLevel. Crea un nivl con GlassBrick, MetalBrick y WoodenBrick basado en probabilidades.
+     * 'numberOfBricks' especifica los bricks entre wood y glass. Los bricks de metal se agregan como extra.
+     * Parte como base en el constructor padre. Luego cambia parámetros.
+     *
+     * @param name Nombre del nivel a crear
+     * @param numberOfBricks número de Bricks totales entre glass y wooden
+     * @param probOfGlass probabilidad de general bricks de glass
+     * @param probOfMetal probabilidad de general bricks de metal
+     * @param seed parámetro para utilizar correctamente la clase Random
+     */
     public RealLevel(String name, int numberOfBricks, double probOfGlass, double probOfMetal, int seed) {
         super();
         ArrayList<Brick> bricks = new ArrayList<>();
@@ -35,6 +40,7 @@ public class RealLevel extends AbstractLevel {
             if(randomNumber < probOfMetal){
                 MetalBrick metalBrick = new MetalBrick();
                 bricks.add(metalBrick);
+                super.sumToObtainablePoints(metalBrick.getScore()); // Inútil ahora, pero útil para escalabilidad
                 metalBrick.addObserver(this);
             }
         }
@@ -43,7 +49,16 @@ public class RealLevel extends AbstractLevel {
         super.setNextLevel(new NullLevel());
     }
 
-
+    /**
+     * Constructor de un RealLevel. Crea un nivl con GlassBrick y WoodenBrick basado en probabilidades.
+     * 'numberOfBricks' especifica los bricks entre wood y glass.
+     * Parte como base en el constructor padre. Luego cambia parámetros.
+     *
+     * @param name Nombre del nivel a crear
+     * @param numberOfBricks número de Bricks totales entre glass y wooden
+     * @param probOfGlass probabilidad de general bricks de glass
+     * @param seed parámetro para utilizar correctamente la clase Random
+     */
     public RealLevel(String name, int numberOfBricks, double probOfGlass, int seed){
         super();
         ArrayList<Brick> bricks = new ArrayList<>();
@@ -68,9 +83,9 @@ public class RealLevel extends AbstractLevel {
     }
 
     /**
-     * Gets whether the level is playable or not.
+     * Un RealLevel es siempre jugable
      *
-     * @return true if the level is playable, false otherwise
+     * @return true
      */
     @Override
     public boolean isPlayableLevel() {
@@ -78,9 +93,9 @@ public class RealLevel extends AbstractLevel {
     }
 
     /**
-     * Whether the level's next level is playable or not.
+     * Retorna true si el nivel siguiente nivel es jugable
      *
-     * @return true if the level's next level is playable, false otherwise
+     * @return true si el nivel siguiente es jugable
      */
     @Override
     public boolean hasNextLevel() {

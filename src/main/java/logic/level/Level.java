@@ -1,6 +1,6 @@
 package logic.level;
 
-import logic.brick.Brick;
+import logic.brick.*;
 import logic.visitor.*;
 
 import java.util.List;
@@ -12,6 +12,14 @@ import java.util.Observer;
  * @author Juan-Pablo Silva
  */
 public interface Level extends Visitor,Observer {
+    /**
+     * Retorna los puntos ganados en un nivel y sólo los de ese nivel.
+     * Siempre menor o igual a los obtenibles. Los que calcula getPoints()
+     *
+     * @return los puntos ganados hasta el momento en un nivel.
+     */
+    int getCurrentPoints();
+
     /**
      * Gets the level's name. Each level must have a name.
      *
@@ -74,7 +82,4 @@ public interface Level extends Visitor,Observer {
      * @param level the next level of a level object
      */
     void setNextLevel(Level level);
-
-    int getCurrentPoints();
-
 }

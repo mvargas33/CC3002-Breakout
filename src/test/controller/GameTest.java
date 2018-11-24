@@ -1,13 +1,13 @@
 package controller;
 
-import logic.brick.Brick;
 import org.junit.Before;
 import org.junit.Test;
-import logic.level.*;
-
-import java.util.List;
 
 import static org.junit.Assert.*;
+
+import logic.level.*;
+import logic.brick.*;
+import java.util.List;
 
 public class GameTest {
     private Game game;
@@ -175,9 +175,10 @@ public class GameTest {
         assertTrue(game.getCurrentLevel().isPlayableLevel());
         assertEquals(3, game.numberOfBalls());              // No se ganaron bolas extra
 
-        // Attack one wooden
+        // Destroy one wooden
         destroyBrick(game.getCurrentLevel().getBricks().get(99));
         assertEquals(50*100 + 200, game.getGlobalPoints());
+        assertEquals(99, game.getCurrentLevel().getNumberOfBricks());
         assertEquals(3, game.numberOfBalls());
 
         // Win level 2

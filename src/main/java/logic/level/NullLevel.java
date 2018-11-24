@@ -1,23 +1,26 @@
 package logic.level;
 
-import logic.brick.AbstractBrick;
-import logic.brick.Brick;
-import logic.visitor.Visitor;
-
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Clase NullLevel. Corresponde con los valores default 'nulos' de un Nivel vacío.
+ * Correspondiente con el 'Null Pattern' visto en clases.
+ *
+ * @author Maximiliano Vargas
+ */
 public class NullLevel extends AbstractLevel{
 
+    /**
+     * Constructor: Crea un nivel nulo con los valores default del padre.
+     * Setea el siguiente nivel como sí mismo, ya que es la cola de la lista de niveles.
+     */
     public NullLevel(){
         super();
         super.setNextLevel(this);
     }
 
     /**
-     * Gets whether the level is playable or not.
+     * Retorna false, un NullLevel no es jugable
      *
-     * @return true if the level is playable, false otherwise
+     * @return false
      */
     @Override
     public boolean isPlayableLevel() {
@@ -25,9 +28,9 @@ public class NullLevel extends AbstractLevel{
     }
 
     /**
-     * Whether the level's next level is playable or not.
+     * Retorna false, un NullLevel no tiene un viel siguiente
      *
-     * @return true if the level's next level is playable, false otherwise
+     * @return false
      */
     @Override
     public boolean hasNextLevel() {
@@ -35,9 +38,9 @@ public class NullLevel extends AbstractLevel{
     }
 
     /**
-     * Adds a level to the list of levels. This adds the level in the last position of the list.
+     * Retorna el nivel a añadir, ya que NullLevel es el último en la lista.
      *
-     * @param level the level to be added
+     * @param level nivel a añadir
      */
     @Override
     public Level addPlayingLevel(Level level) {
