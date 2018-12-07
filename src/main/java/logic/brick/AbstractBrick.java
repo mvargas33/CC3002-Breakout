@@ -72,4 +72,30 @@ public abstract class AbstractBrick extends Observable implements Brick {
         return this.lives;
     }
 
+    /**
+     * Retorna true si el brick es tipo glass
+     * @return  true si es brick de galss
+     */
+    @Override
+    public boolean isGlassBrick(){
+        return false;
+    }
+
+    /**
+     * Retorna true si el brick es tipo wooden
+     * @return  true si es brick de wooden
+     */
+    @Override
+    public boolean isWoodenBrick(){
+        return false;
+    }
+
+    /**
+     * Retorna true si el brick es tipo metal
+     * @return  true si es brick de metal
+     */
+    @Override
+    public boolean isMetalBrick(){
+        return false;
+    }
 }

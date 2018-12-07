@@ -26,4 +26,12 @@ public class MetalBrick extends AbstractBrick{
         v.visitMetalBrick(this);
     }
 
+    /**
+     * Retorna true
+     * @return  true
+     */
+    @Override
+    public boolean isMetalBrick(){
+        return true;
+    }
 }

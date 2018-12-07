@@ -26,4 +26,12 @@ public class WoodenBrick extends AbstractBrick {
         v.visitWoodenBrick(this);
     }
 
+    /**
+     * Retorna true
+     * @return  true
+     */
+    @Override
+    public boolean isWoodenBrick(){
+        return true;
+    }
 }

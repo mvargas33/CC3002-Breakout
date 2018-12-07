@@ -37,4 +37,22 @@ public interface Brick extends Visitable{
      */
     int remainingHits();
 
+    /**
+     * Retorna true si el brick es tipo glass
+     * @return  true si es brick de galss
+     */
+    boolean isGlassBrick();
+
+    /**
+     * Retorna true si el brick es tipo wooden
+     * @return  true si es brick de wooden
+     */
+    boolean isWoodenBrick();
+
+    /**
+     * Retorna true si el brick es tipo metal
+     * @return  true si es brick de metal
+     */
+    boolean isMetalBrick();
+
 }

@@ -26,4 +26,12 @@ public class GlassBrick extends AbstractBrick {
         v.visitGlassBrick(this);
     }
 
+    /**
+     * Retorna true
+     * @return  true
+     */
+    @Override
+    public boolean isGlassBrick(){
+        return true;
+    }
 }

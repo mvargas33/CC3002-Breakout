@@ -11,6 +11,7 @@ import logic.brick.*;
 import logic.level.RealLevel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static ui.GameFatory.*;
@@ -18,6 +19,7 @@ import static ui.GameFatory.*;
 public class Aplicacion extends GameApplication {
     private Entity player;
     private PlayerControl playerControl;
+    private HashMap<Brick, Entity> actualLevelBricks;
 
     @Override
     protected void initSettings(GameSettings gameSettings) {
@@ -59,9 +61,9 @@ public class Aplicacion extends GameApplication {
 
     @Override
     protected void initGame(){
+        player = newPlayer(0,600, playerControl);
         playerControl = new PlayerControl();
         Entity bg = newBackground();
-        player = newPlayer(0,600, playerControl);
         Entity ball = newBall(500,500);
         Entity walls = newWalls();  // Screen collidable walls
         List<Entity> bricks = bricksToEntities(new RealLevel("Level 1", 40, 0.5, 0).getBricks());
