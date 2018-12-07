@@ -13,6 +13,10 @@ import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import logic.brick.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class GameFatory {
     public enum Types{
@@ -22,6 +26,31 @@ public final class GameFatory {
         GLASS_BRICK,
         METAL_BRICK,
         WOODEN_BRICK
+    }
+    public static List<Entity> bricksToEntities(List<Brick> bricks){
+        List<Entity> entities = new ArrayList<>();
+        int i = 0;
+        int j = 0;
+        for(Brick brick : bricks){
+            System.out.println(j);
+            if (i%10 == 0){
+                j++;
+                i=0;
+            }
+            System.out.println(100*i + "," + 20*j);
+            if(brick instanceof GlassBrick){
+                Entity glassBrick = newGlassBrick(100*i, 30*j);
+                entities.add(glassBrick);
+            }else if(brick instanceof MetalBrick){
+                Entity glassBrick = newMetalBrick(100*i, 30*j);
+                entities.add(glassBrick);
+            }else if(brick instanceof WoodenBrick){
+                Entity glassBrick = newWoodenBrick(100*i, 30*j);
+                entities.add(glassBrick);
+            }
+            i++;
+        }
+        return entities;
     }
 
     public static Entity newGlassBrick(double x, double y){

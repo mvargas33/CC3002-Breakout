@@ -33,32 +33,6 @@ public class Aplicacion extends GameApplication {
         launch(args);
     }
 
-    public List<Entity> bricksToEntities(List<Brick> bricks){
-        List<Entity> entities = new ArrayList<>();
-        int i = 0;
-        int j = 0;
-        for(Brick brick : bricks){
-            System.out.println(j);
-            if (i%10 == 0){
-                j++;
-                i=0;
-            }
-            System.out.println(100*i + "," + 20*j);
-            if(brick instanceof GlassBrick){
-                Entity glassBrick = newGlassBrick(100*i, 30*j);
-                entities.add(glassBrick);
-            }else if(brick instanceof MetalBrick){
-                Entity glassBrick = newMetalBrick(100*i, 30*j);
-                entities.add(glassBrick);
-            }else if(brick instanceof WoodenBrick){
-                Entity glassBrick = newWoodenBrick(100*i, 30*j);
-                entities.add(glassBrick);
-            }
-            i++;
-        }
-        return entities;
-    }
-
     @Override
     protected void initGame(){
         player = newPlayer(0,600, playerControl);
