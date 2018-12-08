@@ -133,12 +133,17 @@ public class Aplicacion extends GameApplication {
                     protected void onHitBoxTrigger(Entity ball, Entity wall, HitBox boxBall, HitBox boxWall) {
                         if (boxWall.getName().equals("BOT")){
                             ball.removeFromWorld();
-                            levelStarted = false;
-                            Entity s_ball = newBall(player.getX() + 70,player.getY() - 17, false);// Symbolic ball
-                            playerControl.stop();
-                            playerControl.blockRight();
-                            playerControl.blockLeft();
-                            getGameWorld().addEntity(s_ball);
+                            facade.dropBall();
+                            if(facade.getBallsLeft() > 0) {
+                                levelStarted = false;
+                                Entity s_ball = newBall(player.getX() + 70, player.getY() - 17, false);// Symbolic ball
+                                playerControl.stop();
+                                playerControl.blockRight();
+                                playerControl.blockLeft();
+                                getGameWorld().addEntity(s_ball);
+                            }else{
+                                // GAME OVER
+                            }
                         }
                     }
                 }
@@ -169,7 +174,6 @@ public class Aplicacion extends GameApplication {
                     @Override
                     protected void onCollision(Entity ball, Entity UIBrick) {
                         Brick b = actualLevelBricks.get(UIBrick);
-                        System.out.println("Pegé a brick de metal" + b.isMetalBrick());
                         b.hit();
                         if(b.isDestroyed()){
                             UIBrick.removeFromWorld();
