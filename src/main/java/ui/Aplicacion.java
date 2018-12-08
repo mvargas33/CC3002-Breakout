@@ -21,7 +21,7 @@ import static ui.GameFatory.*;
 
 public class Aplicacion extends GameApplication {
     private int width = 1100;
-    private int heigth = 650;
+    private int heigth = 700;
     private int nivelNumero = 1;
     private boolean levelStarted = false;
     private boolean isThisFirstLevel = true;
@@ -48,7 +48,7 @@ public class Aplicacion extends GameApplication {
         facade = new HomeworkTwoFacade();
         playerControl = new PlayerControl();
         playerControl.blockLeft();playerControl.blockRight();
-        player = newPlayer(width/2.0 - 75,600, playerControl);    // Platform 150*30
+        player = newPlayer(width/2.0 - 75,630, playerControl);    // Platform 150*30
         Entity bg = newBackground(width, heigth);                       // Background
         Entity ball = newBall(player.getX() + 70,player.getY() - 17, false);// Symbolic ball
         Entity walls = newWalls();                                      // Screen collidable walls
@@ -69,16 +69,18 @@ public class Aplicacion extends GameApplication {
         input.addAction(new UserAction("New Level") {
             @Override
             protected void onAction() {
+                Random randomObject = new Random();double nBricks = 0;
+                while(!(nBricks >= 30 && nBricks < 50)){
+                    nBricks = randomObject.nextDouble()*100;
+                }
                 if(isThisFirstLevel){
-                    Random randomObject = new Random();
-                    facade.setCurrentLevel(facade.newLevelWithBricksFull("Level " + nivelNumero, 30, randomObject.nextDouble(), randomObject.nextDouble(), 0));
+                    facade.setCurrentLevel(facade.newLevelWithBricksFull("Level " + nivelNumero, (int)nBricks, randomObject.nextDouble(), nBricks/100, 0));
                     List<Brick> levelBricks = facade.getBricks();
                     System.out.println(levelBricks.size());
                     actualLevelBricks = linkBricks(levelBricks);
                     isThisFirstLevel = false;
                 }else{
-                    Random randomObject = new Random();
-                    facade.addPlayingLevel(facade.newLevelWithBricksFull("Level " + nivelNumero, 80, randomObject.nextDouble(), randomObject.nextDouble(), 0));
+                    facade.addPlayingLevel(facade.newLevelWithBricksFull("Level " + nivelNumero, (int)nBricks, randomObject.nextDouble(), nBricks/100, 0));
                 }
                 nivelNumero++;
             }
