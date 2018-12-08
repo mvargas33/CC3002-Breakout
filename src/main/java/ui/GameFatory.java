@@ -9,14 +9,19 @@ import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
+import facade.HomeworkTwoFacade;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import logic.brick.*;
+import logic.level.Level;
+import logic.level.RealLevel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public final class GameFatory {
     public enum Types{
@@ -27,17 +32,23 @@ public final class GameFatory {
         METAL_BRICK,
         WOODEN_BRICK
     }
+
+    public static void addFullLevel(int number, HomeworkTwoFacade facade){
+        Random randomObject = new Random();
+        facade.addPlayingLevel(facade.newLevelWithBricksFull("Level " + String.valueOf(number), 80, randomObject.nextDouble(), randomObject.nextDouble(), 0));
+    }
+
     public static List<Entity> bricksToEntities(List<Brick> bricks){
         List<Entity> entities = new ArrayList<>();
         int i = 0;
         int j = 0;
         for(Brick brick : bricks){
-            System.out.println(j);
+            //System.out.println(j);
             if (i%10 == 0){
                 j++;
                 i=0;
             }
-            System.out.println(100*i + "," + 20*j);
+            //System.out.println(100*i + "," + 20*j);
             if(brick instanceof GlassBrick){
                 Entity glassBrick = newGlassBrick(100*i, 30*j);
                 entities.add(glassBrick);
@@ -53,6 +64,29 @@ public final class GameFatory {
         return entities;
     }
 
+    public static HashMap<Entity, Brick> linkBricks(List<Brick> bricks){
+        HashMap<Entity, Brick> map = new HashMap<>();
+        int i = 0;
+        int j = 30; // Empty row at top
+        for(Brick brick : bricks){
+            if (i%10 == 0){
+                j++;i=0;
+            }
+            if(brick.isGlassBrick()){
+                Entity glassEntity = newGlassBrick(100*i, 30*j);
+                map.put(glassEntity, brick);
+            }else if(brick.isMetalBrick()){
+                Entity metalEntity = newMetalBrick(100*i, 30*j);
+                map.put(metalEntity, brick);
+            }else if(brick.isWoodenBrick()){
+                Entity woodenEntity = newWoodenBrick(100*i, 30*j);
+                map.put(woodenEntity, brick);
+            }
+            i++;
+        }
+        return map;
+    }
+
     public static Entity newGlassBrick(double x, double y){
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.STATIC);
@@ -62,7 +96,7 @@ public final class GameFatory {
                 .bbox(new HitBox("Brick",BoundingShape.box(100, 30)))
                 .viewFromNode(new Rectangle(100, 30, Color.RED))
                 .with(physics, new CollidableComponent(true))
-                .build();
+                .buildAndAttach();
     }
 
     public static Entity newMetalBrick(double x, double y){
@@ -74,7 +108,7 @@ public final class GameFatory {
                 .bbox(new HitBox("Brick",BoundingShape.box(100, 30)))
                 .viewFromNode(new Rectangle(100, 30, Color.GREEN))
                 .with(physics, new CollidableComponent(true))
-                .build();
+                .buildAndAttach();
     }
 
     public static Entity newWoodenBrick(double x, double y){
@@ -86,7 +120,7 @@ public final class GameFatory {
                 .bbox(new HitBox("Brick",BoundingShape.box(100, 30)))
                 .viewFromNode(new Rectangle(100, 30, Color.YELLOW))
                 .with(physics, new CollidableComponent(true))
-                .build();
+                .buildAndAttach();
     }
 
     public static Entity newPlayer(double x, double y, PlayerControl playerControl){
@@ -101,27 +135,30 @@ public final class GameFatory {
                 .build();
     }
 
-    public static Entity newBackground(){
+    public static Entity newBackground(double width, double height){
         return Entities.builder()
-                .viewFromNode(new Rectangle(1000, 650, Color.BLACK))
+                .viewFromNode(new Rectangle(width, height, Color.BLACK))
                 .renderLayer(RenderLayer.BACKGROUND)
                 .build();
     }
 
-    public static Entity newBall(double x, double y){
+    public static Entity newBall(double x, double y, boolean withSpeed){
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
         physics.setFixtureDef(
                 new FixtureDef().restitution(1f).density(0.1f).friction(0f)
         );
-        physics.setOnPhysicsInitialized(
-                () -> physics.setLinearVelocity(5*40, -5*30)
-        );
+        if(withSpeed){
+            physics.setOnPhysicsInitialized(
+                    () -> physics.setLinearVelocity(200*(new Random().nextDouble()-0.5), -200)
+            );
+        }
+
         return Entities.builder()
                 .at(x,y)
                 .type(Types.BALL)
                 .bbox(new HitBox("Ball", BoundingShape.circle(10)))
-                .viewFromNode(new Circle(10, Color.LIGHTCORAL))
+                .viewFromNode(new Circle(8, Color.LIGHTCORAL))
                 .with(physics, new CollidableComponent(true))
                 .build();
     }

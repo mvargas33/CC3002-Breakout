@@ -6,8 +6,10 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.settings.GameSettings;
+import facade.HomeworkTwoFacade;
 import javafx.scene.input.KeyCode;
 import logic.brick.*;
+import logic.level.Level;
 import logic.level.RealLevel;
 
 import java.util.ArrayList;
@@ -17,16 +19,22 @@ import java.util.List;
 import static ui.GameFatory.*;
 
 public class Aplicacion extends GameApplication {
+    private int width = 1100;
+    private int heigth = 650;
+    private int nivelNumero = 1;
+    private boolean levelStarted = false;
+    private boolean isThisFirstLevel = true;
     private Entity player;
     private PlayerControl playerControl;
-    private HashMap<Brick, Entity> actualLevelBricks;
+    private HashMap<Entity, Brick> actualLevelBricks;
+    private HomeworkTwoFacade facade;
 
     @Override
     protected void initSettings(GameSettings gameSettings) {
-        gameSettings.setWidth(1000);
-        gameSettings.setHeight(650);
-        gameSettings.setTitle("One Piece Breakout");
-        gameSettings.setVersion("0.1");
+        gameSettings.setWidth(width);
+        gameSettings.setHeight(heigth);
+        gameSettings.setTitle("|");
+        gameSettings.setVersion("");
     }
 
     public static void main(String... args){
@@ -35,21 +43,56 @@ public class Aplicacion extends GameApplication {
 
     @Override
     protected void initGame(){
-        player = newPlayer(0,600, playerControl);
+        /* EMPTY GAME */
+        facade = new HomeworkTwoFacade();
         playerControl = new PlayerControl();
-        Entity bg = newBackground();
-        Entity ball = newBall(500,500);
-        Entity walls = newWalls();  // Screen collidable walls
+        playerControl.blockLeft();playerControl.blockRight();
+        player = newPlayer(width/2.0 - 75,600, playerControl);    // Platform 150*30
+        Entity bg = newBackground(width, heigth);                       // Background
+        Entity ball = newBall(player.getX() + 70,player.getY() - 17, false);// Symbolic ball
+        Entity walls = newWalls();                                      // Screen collidable walls
+        getGameWorld().addEntities(bg, player, ball, walls);
+        /* EMPTY GAME */
+/*
         List<Entity> bricks = bricksToEntities(new RealLevel("Level 1", 40, 0.5, 0).getBricks());
         for(Entity br : bricks){
             getGameWorld().addEntity(br);
         }
-        getGameWorld().addEntities(bg, player, ball, walls);
+*/
     }
 
     @Override
     protected void initInput(){
         Input input = getInput();
+
+        input.addAction(new UserAction("New Level") {
+            @Override
+            protected void onAction() {
+                addFullLevel(nivelNumero, facade);
+                if(isThisFirstLevel){
+                    List<Brick> levelBricks = facade.getBricks();
+                    actualLevelBricks = linkBricks(levelBricks);
+                    isThisFirstLevel = false;
+                }
+                nivelNumero++;
+            }
+        }, KeyCode.N);
+
+        input.addAction(new UserAction("Start level") {
+            @Override
+            protected void onAction() {
+                //System.out.println("Barra espaciadora!!");
+                if(!levelStarted){
+                    getGameWorld().getEntitiesByType(Types.BALL).forEach(Entity::removeFromWorld);
+                    List<Entity> p = getGameWorld().getEntitiesByType(Types.PLAYER);
+                    Entity ball = newBall(p.get(0).getX() + 70,p.get(0).getY() - 17, true);
+                    getGameWorld().addEntity(ball);
+                    levelStarted = true;
+                    playerControl.unblockLeft();
+                    playerControl.unblockRight();
+                }
+            }
+        }, KeyCode.SPACE);
 
         input.addAction(new UserAction("Move Right"){
             @Override
@@ -84,8 +127,12 @@ public class Aplicacion extends GameApplication {
                     protected void onHitBoxTrigger(Entity ball, Entity wall, HitBox boxBall, HitBox boxWall) {
                         if (boxWall.getName().equals("BOT")){
                             ball.removeFromWorld();
-                            Entity new_ball = newBall(500,500);
-                            getGameWorld().addEntities(new_ball);
+                            levelStarted = false;
+                            Entity s_ball = newBall(player.getX() + 70,player.getY() - 17, false);// Symbolic ball
+                            playerControl.stop();
+                            playerControl.blockRight();
+                            playerControl.blockLeft();
+                            getGameWorld().addEntity(s_ball);
                         }
                     }
                 }
@@ -108,6 +155,14 @@ public class Aplicacion extends GameApplication {
                             playerControl.blockLeft();
                             playerControl.stop();
                         }
+                    }
+                }
+        );
+        getPhysicsWorld().addCollisionHandler(
+                new CollisionHandler(Types.BALL, Types.GLASS_BRICK) {
+                    @Override
+                    protected void onCollision(Entity a, Entity b) {
+                        super.onCollision(a, b);
                     }
                 }
         );
