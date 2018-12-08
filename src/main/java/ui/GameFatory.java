@@ -28,58 +28,30 @@ public final class GameFatory {
         PLAYER,
         BALL,
         WALL,
-        GLASS_BRICK,
-        METAL_BRICK,
-        WOODEN_BRICK
+        BRICK
     }
-
+/*
     public static void addFullLevel(int number, HomeworkTwoFacade facade){
         Random randomObject = new Random();
-        facade.addPlayingLevel(facade.newLevelWithBricksFull("Level " + String.valueOf(number), 80, randomObject.nextDouble(), randomObject.nextDouble(), 0));
+        facade.addPlayingLevel(facade.newLevelWithBricksFull("Level " + number, 80, randomObject.nextDouble(), randomObject.nextDouble(), 0));
     }
-
-    public static List<Entity> bricksToEntities(List<Brick> bricks){
-        List<Entity> entities = new ArrayList<>();
-        int i = 0;
-        int j = 0;
-        for(Brick brick : bricks){
-            //System.out.println(j);
-            if (i%10 == 0){
-                j++;
-                i=0;
-            }
-            //System.out.println(100*i + "," + 20*j);
-            if(brick instanceof GlassBrick){
-                Entity glassBrick = newGlassBrick(100*i, 30*j);
-                entities.add(glassBrick);
-            }else if(brick instanceof MetalBrick){
-                Entity glassBrick = newMetalBrick(100*i, 30*j);
-                entities.add(glassBrick);
-            }else if(brick instanceof WoodenBrick){
-                Entity glassBrick = newWoodenBrick(100*i, 30*j);
-                entities.add(glassBrick);
-            }
-            i++;
-        }
-        return entities;
-    }
-
+*/
     public static HashMap<Entity, Brick> linkBricks(List<Brick> bricks){
         HashMap<Entity, Brick> map = new HashMap<>();
         int i = 0;
-        int j = 30; // Empty row at top
+        int j = 1; // Empty row at top
         for(Brick brick : bricks){
             if (i%10 == 0){
                 j++;i=0;
             }
             if(brick.isGlassBrick()){
-                Entity glassEntity = newGlassBrick(100*i, 30*j);
+                Entity glassEntity = newBrick(100*i, 30*j, Color.RED);
                 map.put(glassEntity, brick);
             }else if(brick.isMetalBrick()){
-                Entity metalEntity = newMetalBrick(100*i, 30*j);
+                Entity metalEntity = newBrick(100*i, 30*j, Color.DARKGREY);
                 map.put(metalEntity, brick);
             }else if(brick.isWoodenBrick()){
-                Entity woodenEntity = newWoodenBrick(100*i, 30*j);
+                Entity woodenEntity = newBrick(100*i, 30*j, Color.GREENYELLOW);
                 map.put(woodenEntity, brick);
             }
             i++;
@@ -87,38 +59,14 @@ public final class GameFatory {
         return map;
     }
 
-    public static Entity newGlassBrick(double x, double y){
+    public static Entity newBrick(double x, double y, Color c){
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.STATIC);
         return Entities.builder()
                 .at(x, y)
-                .type(Types.GLASS_BRICK)
+                .type(Types.BRICK)
                 .bbox(new HitBox("Brick",BoundingShape.box(100, 30)))
-                .viewFromNode(new Rectangle(100, 30, Color.RED))
-                .with(physics, new CollidableComponent(true))
-                .buildAndAttach();
-    }
-
-    public static Entity newMetalBrick(double x, double y){
-        PhysicsComponent physics = new PhysicsComponent();
-        physics.setBodyType(BodyType.STATIC);
-        return Entities.builder()
-                .at(x, y)
-                .type(Types.METAL_BRICK)
-                .bbox(new HitBox("Brick",BoundingShape.box(100, 30)))
-                .viewFromNode(new Rectangle(100, 30, Color.GREEN))
-                .with(physics, new CollidableComponent(true))
-                .buildAndAttach();
-    }
-
-    public static Entity newWoodenBrick(double x, double y){
-        PhysicsComponent physics = new PhysicsComponent();
-        physics.setBodyType(BodyType.STATIC);
-        return Entities.builder()
-                .at(x, y)
-                .type(Types.WOODEN_BRICK)
-                .bbox(new HitBox("Brick",BoundingShape.box(100, 30)))
-                .viewFromNode(new Rectangle(100, 30, Color.YELLOW))
+                .viewFromNode(new Rectangle(100, 30, c))
                 .with(physics, new CollidableComponent(true))
                 .buildAndAttach();
     }

@@ -15,6 +15,7 @@ import logic.level.RealLevel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import static ui.GameFatory.*;
 
@@ -68,11 +69,16 @@ public class Aplicacion extends GameApplication {
         input.addAction(new UserAction("New Level") {
             @Override
             protected void onAction() {
-                addFullLevel(nivelNumero, facade);
                 if(isThisFirstLevel){
+                    Random randomObject = new Random();
+                    facade.setCurrentLevel(facade.newLevelWithBricksFull("Level " + nivelNumero, 30, randomObject.nextDouble(), randomObject.nextDouble(), 0));
                     List<Brick> levelBricks = facade.getBricks();
+                    System.out.println(levelBricks.size());
                     actualLevelBricks = linkBricks(levelBricks);
                     isThisFirstLevel = false;
+                }else{
+                    Random randomObject = new Random();
+                    facade.addPlayingLevel(facade.newLevelWithBricksFull("Level " + nivelNumero, 80, randomObject.nextDouble(), randomObject.nextDouble(), 0));
                 }
                 nivelNumero++;
             }
@@ -159,10 +165,15 @@ public class Aplicacion extends GameApplication {
                 }
         );
         getPhysicsWorld().addCollisionHandler(
-                new CollisionHandler(Types.BALL, Types.GLASS_BRICK) {
+                new CollisionHandler(Types.BALL, Types.BRICK) {
                     @Override
-                    protected void onCollision(Entity a, Entity b) {
-                        super.onCollision(a, b);
+                    protected void onCollision(Entity ball, Entity UIBrick) {
+                        Brick b = actualLevelBricks.get(UIBrick);
+                        System.out.println("Pegé a brick de metal" + b.isMetalBrick());
+                        b.hit();
+                        if(b.isDestroyed()){
+                            UIBrick.removeFromWorld();
+                        }
                     }
                 }
         );
