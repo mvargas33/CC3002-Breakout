@@ -8,14 +8,13 @@ import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.settings.GameSettings;
 import facade.HomeworkTwoFacade;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import logic.brick.*;
 import logic.level.Level;
 import logic.level.RealLevel;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static ui.GameFatory.*;
 
@@ -52,7 +51,8 @@ public class Aplicacion extends GameApplication {
         Entity bg = newBackground(width, heigth);                       // Background
         Entity ball = newBall(player.getX() + 70,player.getY() - 17, false);// Symbolic ball
         Entity walls = newWalls();                                      // Screen collidable walls
-        getGameWorld().addEntities(bg, player, ball, walls);
+        getGameWorld().addEntities(bg, player, walls);
+        updateBalls(facade.getBallsLeft(), width);
         /* EMPTY GAME */
 /*
         List<Entity> bricks = bricksToEntities(new RealLevel("Level 1", 40, 0.5, 0).getBricks());
@@ -94,7 +94,6 @@ public class Aplicacion extends GameApplication {
                     getGameWorld().getEntitiesByType(Types.BALL).forEach(Entity::removeFromWorld);
                     List<Entity> p = getGameWorld().getEntitiesByType(Types.PLAYER);
                     Entity ball = newBall(p.get(0).getX() + 70,p.get(0).getY() - 17, true);
-                    getGameWorld().addEntity(ball);
                     levelStarted = true;
                     playerControl.unblockLeft();
                     playerControl.unblockRight();
@@ -127,7 +126,7 @@ public class Aplicacion extends GameApplication {
 
     @Override
     protected void initPhysics(){
-        getPhysicsWorld().setGravity(0,0);
+        getPhysicsWorld().setGravity(0.3,0.3);
 
         getPhysicsWorld().addCollisionHandler(
                 new CollisionHandler(Types.BALL, Types.WALL) {
@@ -142,7 +141,6 @@ public class Aplicacion extends GameApplication {
                                 playerControl.stop();
                                 playerControl.blockRight();
                                 playerControl.blockLeft();
-                                getGameWorld().addEntity(s_ball);
                             }else{
                                 // GAME OVER
                             }
@@ -179,6 +177,7 @@ public class Aplicacion extends GameApplication {
                         b.hit();
                         if(b.isDestroyed()){
                             UIBrick.removeFromWorld();
+                            getGameState().increment("score", +(b.getScore()));
                         }
                     }
                 }
@@ -187,7 +186,22 @@ public class Aplicacion extends GameApplication {
     }
 
     @Override
+    protected void initGameVars(Map<String, Object> vars) {
+        vars.put("score", 0);
+    }
+
+    @Override
+    protected void initUI() {
+        Text textScore1 = getUIFactory().newText("", Color.WHITE, 25);
+        textScore1.setTranslateX(32);
+        textScore1.setTranslateY(25);
+        textScore1.textProperty().bind(getGameState().intProperty("score").asString());
+        getGameScene().addUINodes(textScore1);
+    }
+
+    @Override
     protected void onUpdate(double tpf){
+
  /*d       System.out.println(player.getX());
         double currentPositionX = player.getX();
         if (currentPositionX <= 0.0) playerControl.blockLeft();

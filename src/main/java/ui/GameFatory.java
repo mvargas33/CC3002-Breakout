@@ -33,6 +33,18 @@ public final class GameFatory {
         facade.addPlayingLevel(facade.newLevelWithBricksFull("Level " + number, 80, randomObject.nextDouble(), randomObject.nextDouble(), 0));
     }
 */
+    public static void updateBalls(int cuantity, int width){
+        int i = 0;
+        int j = -1;
+        for(int q = 0; q < cuantity; q++){
+            if(i%30 == 0){
+                j++;i=0;
+            }
+            Entity ball = newBall(width - 32 - 25 + 25*i, 5 + 25*j, false);
+            i--;
+        }
+    }
+
     public static HashMap<Entity, Brick> linkBricks(List<Brick> bricks){
         Collections.shuffle(bricks);
         HashMap<Entity, Brick> map = new HashMap<>();
@@ -86,7 +98,7 @@ public final class GameFatory {
     public static Entity newBackground(double width, double height){
         return Entities.builder()
                 .viewFromNode(new Rectangle(width, height, Color.BLACK))
-                .viewFromTexture("arabasta-1100x700.png")
+                .viewFromTexture("sunny-1100x700.png")
                 .renderLayer(RenderLayer.BACKGROUND)
                 .build();
     }
@@ -110,7 +122,7 @@ public final class GameFatory {
                 .viewFromNode(new Circle(8, Color.LIGHTCORAL))
                 .viewFromTexture("logpose.png")
                 .with(physics, new CollidableComponent(true))
-                .build();
+                .buildAndAttach();
     }
 
     public static Entity newWalls() {
