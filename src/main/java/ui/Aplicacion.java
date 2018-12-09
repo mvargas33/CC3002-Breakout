@@ -192,7 +192,7 @@ public class Aplicacion extends GameApplication {
 
     @Override
     protected void initUI() {
-        Text textScore1 = getUIFactory().newText("", Color.WHITE, 25);
+        Text textScore1 = getUIFactory().newText("7", Color.WHITE, 25);
         textScore1.setTranslateX(32);
         textScore1.setTranslateY(25);
         textScore1.textProperty().bind(getGameState().intProperty("score").asString());
