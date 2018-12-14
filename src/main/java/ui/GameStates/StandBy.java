@@ -55,9 +55,5 @@ public class StandBy extends AbstractState {
         getGame().setGameState(new Playing(getGame()));
     }
 
-    @Override
-    public void key_N(){
-        double nBricks = super.genNumberOfBricks();
-        getGame().getFacade().addPlayingLevel(getGame().getFacade().newLevelWithBricksFull("Level " + getGame().getNivelNumero(), (int)nBricks, new Random().nextDouble(), nBricks/100, 0));
-    }
+
 }

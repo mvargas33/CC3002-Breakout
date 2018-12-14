@@ -11,4 +11,9 @@ public class GameOver extends AbstractState{
         this.gameIsWon = gameIsWon;
     }
 
+    @Override
+    public void key_N(){}
+
+    @Override
+    public void key_SPACE(){}
 }

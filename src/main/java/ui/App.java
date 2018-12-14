@@ -21,8 +21,6 @@ public class App extends GameApplication {
     private int width = 1100;
     private int heigth = 700;
     private int nivelNumero = 1;
-    private boolean levelStarted = false;
-    private boolean isThisFirstLevel = true;
     private HashMap<Entity, Brick> actualLevelBricks;
     private HomeworkTwoFacade facade;
     private State gameState;
@@ -122,26 +120,13 @@ public class App extends GameApplication {
                     protected void onHitBoxTrigger(Entity ball, Entity wall, HitBox boxBall, HitBox boxWall) {
                         if (boxWall.getName().equals("BOT")){
                             facade.dropBall();
-
-                            if(facade.getBallsLeft() > 0) {
-                                levelStarted = false;
-                                gameState.ballDrop(ball);
-                                //ball.removeFromWorld();
-                                //entityController.stop();
-                                //entityController.blockRight();
-                                //entityController.blockLeft();
-                            }else{
-                                gameState.looseGame();
+                            System.out.println("Number of balls: " + facade.getBallsLeft());
+                            if(facade.isGameOver()){
+                                System.out.println("GAME OVER");
+                                gameState.looseGame();return;
                             }
-
+                            gameState.ballDrop(ball);   // And add a new one
                         }
-                    }
-                }
-        );
-        getPhysicsWorld().addCollisionHandler(
-                new CollisionHandler(Types.BALL, Types.PLAYER) {
-                    @Override
-                    protected void onCollisionBegin(Entity ball, Entity player){
                     }
                 }
         );
@@ -151,13 +136,8 @@ public class App extends GameApplication {
                     protected void onHitBoxTrigger(Entity player, Entity wall, HitBox boxPlayer, HitBox boxWall) {
                         if (boxWall.getName().equals("RIGHT")){
                             gameState.rightWall();
-                            //entityController.blockRight();
-                            //entityController.stop();
                         }else if (boxWall.getName().equals("LEFT")){
-                            //System.out.println("LEFT WALL IN CONTRLLES");
                             gameState.leftWall();
-                            //entityController.blockLeft();
-                            //entityController.stop();
                         }
                     }
                 }
@@ -171,6 +151,12 @@ public class App extends GameApplication {
                         if(b.isDestroyed()){
                             UIBrick.removeFromWorld();
                             getGameState().increment("score", +(b.getScore()));
+                            if(facade.getCurrentLevel().getCurrentPoints() == 0){  // Pasamos a otro nivel
+                                gameState.goToNextLevel();
+                            }
+                        }
+                        if(facade.winner()){
+                            gameState.winGame();
                         }
                     }
                 }
@@ -194,11 +180,5 @@ public class App extends GameApplication {
 
     @Override
     protected void onUpdate(double tpf){
-
- /*d       System.out.println(player.getX());
-        double currentPositionX = player.getX();
-        if (currentPositionX <= 0.0) entityController.blockLeft();
-        if (currentPositionX >= getWidth()) entityController.blockRight();
-*/
     }
 }

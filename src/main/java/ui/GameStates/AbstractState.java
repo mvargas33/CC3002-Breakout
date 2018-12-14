@@ -10,6 +10,7 @@ import ui.GameFatory;
 
 import java.util.Random;
 
+import static ui.GameFatory.linkBricks;
 import static ui.GameFatory.newBall;
 
 public abstract class AbstractState implements State{
@@ -51,13 +52,10 @@ public abstract class AbstractState implements State{
     }
 
     @Override
-    public void addLevel() {
-
-    }
-
-    @Override
     public void goToNextLevel() {
-
+        getGame().getGameWorld().getEntitiesByType(GameFatory.Types.BRICK).forEach(e -> e.removeFromWorld());   // Remove metal bricks
+        getGame().setActualLevelBricks(linkBricks(getGame().getFacade().getBricks()));
+        getGame().setGameState(new StandBy(getGame())); // Go to StandBy State
     }
 
     @Override
@@ -67,6 +65,10 @@ public abstract class AbstractState implements State{
 
     @Override
     public void looseGame() {
+        playerController.stop();
+        playerController.blockLeft();
+        playerController.blockRight();
+        ballController.stop();
         getGame().setGameState(new GameOver(getGame(), false));
     }
 
@@ -79,11 +81,12 @@ public abstract class AbstractState implements State{
     public void key_SPACE(){}
 
     @Override
-    public void key_N() {}
-
+    public void key_N(){
+        double nBricks = genNumberOfBricks();
+        getGame().getFacade().addPlayingLevel(getGame().getFacade().newLevelWithBricksFull("Level " + getGame().getNivelNumero(), (int)nBricks, new Random().nextDouble(), nBricks/100, 0));
+    }
     @Override
     public void rightWall(){
-        System.out.println("RIGHT WALL");
         playerController.stop();
         playerController.blockRight();
         playerController.unblockLeft();
@@ -91,7 +94,6 @@ public abstract class AbstractState implements State{
 
     @Override
     public void leftWall(){
-        System.out.println("LEFT WALL");
         playerController.stop();
         playerController.blockLeft();
         playerController.unblockRight();
@@ -110,7 +112,7 @@ public abstract class AbstractState implements State{
     public double genNumberOfBricks(){
         Random randomObject = new Random();
         double nBricks = 0;
-        while(!(nBricks >= 30 && nBricks < 50)){
+        while(!(nBricks >= 3 && nBricks < 5)){
             nBricks = randomObject.nextDouble()*100;
         }
         return nBricks;

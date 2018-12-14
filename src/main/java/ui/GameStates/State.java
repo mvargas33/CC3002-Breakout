@@ -24,7 +24,6 @@ public interface State {
 
     void shootBall();
 
-    void addLevel();
 
     void goToNextLevel();
 
