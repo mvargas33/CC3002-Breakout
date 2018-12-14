@@ -1,17 +1,63 @@
 package ui.GameStates;
 
-import com.almasb.fxgl.app.GameApplication;
+import facade.HomeworkTwoFacade;
+import logic.brick.Brick;
 import ui.App;
 
-public class StandBy extends GameStarted{
+import java.util.List;
+import java.util.Random;
+
+import static ui.GameFatory.linkBricks;
+
+public class StandBy extends AbstractState {
 
     public StandBy(App game){
         super(game);
     }
 
     @Override
+    public void moveRight() {
+        super.moveRight();
+        getBallController().right();
+    }
+
+    @Override
+    public void moveLeft() {
+        super.moveLeft();
+        getBallController().left();
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        getBallController().stop();
+    }
+
+    @Override
+    public void rightWall(){
+        super.rightWall();
+        getBallController().stop();
+        getBallController().blockRight();
+        getBallController().unblockLeft();
+    }
+
+    @Override
+    public void leftWall(){
+        super.leftWall();
+        getBallController().stop();
+        getBallController().blockLeft();
+        getBallController().unblockRight();
+    }
+
+    @Override
     public void key_SPACE(){
-        super.key_SPACE();
+        getBallController().throwAway();
         getGame().setGameState(new Playing(getGame()));
+    }
+
+    @Override
+    public void key_N(){
+        double nBricks = super.genNumberOfBricks();
+        getGame().getFacade().addPlayingLevel(getGame().getFacade().newLevelWithBricksFull("Level " + getGame().getNivelNumero(), (int)nBricks, new Random().nextDouble(), nBricks/100, 0));
     }
 }

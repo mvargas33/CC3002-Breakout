@@ -23,13 +23,28 @@ public class App extends GameApplication {
     private int nivelNumero = 1;
     private boolean levelStarted = false;
     private boolean isThisFirstLevel = true;
-    private Entity player;
     private HashMap<Entity, Brick> actualLevelBricks;
     private HomeworkTwoFacade facade;
     private State gameState;
 
     public void setGameState(State newstate){
         this.gameState = newstate;
+    }
+
+    public HomeworkTwoFacade getFacade(){
+        return facade;
+    }
+
+    public int getNivelNumero(){
+        return nivelNumero;
+    }
+
+    public void setNivelNumero(int numero){
+        this.nivelNumero = numero;
+    }
+
+    public void setActualLevelBricks(HashMap<Entity, Brick> linkedBricks){
+        actualLevelBricks = linkedBricks;
     }
 
     @Override
@@ -53,7 +68,7 @@ public class App extends GameApplication {
         getGameWorld().addEntity(walls);
         //updateBalls(facade.getBallsLeft(), width);
         facade = new HomeworkTwoFacade();
-        gameState = new GameStarted(this);
+        gameState = new GameNotStarted(this);
     }
 
     @Override
@@ -63,38 +78,13 @@ public class App extends GameApplication {
         input.addAction(new UserAction("New Level") {
             @Override
             protected void onAction() {
-                Random randomObject = new Random();double nBricks = 0;
-                while(!(nBricks >= 30 && nBricks < 50)){
-                    nBricks = randomObject.nextDouble()*100;
-                }
-                if(isThisFirstLevel){
-                    facade.setCurrentLevel(facade.newLevelWithBricksFull("Level " + nivelNumero, (int)nBricks, randomObject.nextDouble(), nBricks/100, 0));
-                    List<Brick> levelBricks = facade.getBricks();
-                    System.out.println(levelBricks.size());
-                    actualLevelBricks = linkBricks(levelBricks);
-                    isThisFirstLevel = false;
-                    gameState.key_N();
-                }else{
-                    facade.addPlayingLevel(facade.newLevelWithBricksFull("Level " + nivelNumero, (int)nBricks, randomObject.nextDouble(), nBricks/100, 0));
-                }
-                nivelNumero++;
+                gameState.key_N();
             }
         }, KeyCode.N);
 
         input.addAction(new UserAction("Start level") {
             @Override
             protected void onAction() {
-                //System.out.println("Barra espaciadora!!");
-                /*if(!levelStarted){
-                    getGameWorld().getEntitiesByType(Types.BALL).forEach(Entity::removeFromWorld);
-                    List<Entity> p = getGameWorld().getEntitiesByType(Types.PLAYER);
-                    Entity ball = newBall(p.get(0).getX() + 70,p.get(0).getY() - 17, false);
-
-                    levelStarted = true;
-                    //entityController.unblockLeft();
-                    //entityController.unblockRight();
-
-                }*/
                 gameState.key_SPACE();
             }
         }, KeyCode.SPACE);
@@ -131,18 +121,19 @@ public class App extends GameApplication {
                     @Override
                     protected void onHitBoxTrigger(Entity ball, Entity wall, HitBox boxBall, HitBox boxWall) {
                         if (boxWall.getName().equals("BOT")){
-                            ball.removeFromWorld();
                             facade.dropBall();
+
                             if(facade.getBallsLeft() > 0) {
                                 levelStarted = false;
-                                gameState.ballDrop();
-                                Entity s_ball = newBall(player.getX() + 70, player.getY() - 17, new EntityController());// Symbolic ball
+                                gameState.ballDrop(ball);
+                                //ball.removeFromWorld();
                                 //entityController.stop();
                                 //entityController.blockRight();
                                 //entityController.blockLeft();
                             }else{
                                 gameState.looseGame();
                             }
+
                         }
                     }
                 }

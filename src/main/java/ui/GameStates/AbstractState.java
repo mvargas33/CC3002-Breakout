@@ -1,9 +1,16 @@
 package ui.GameStates;
 
-import com.almasb.fxgl.app.GameApplication;
+import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.component.Component;
+import com.almasb.fxgl.physics.PhysicsComponent;
+import javafx.geometry.Point2D;
 import ui.App;
 import ui.EntityController;
 import ui.GameFatory;
+
+import java.util.Random;
+
+import static ui.GameFatory.newBall;
 
 public abstract class AbstractState implements State{
     private App game;
@@ -55,12 +62,12 @@ public abstract class AbstractState implements State{
 
     @Override
     public void winGame() {
-
+        getGame().setGameState(new GameOver(getGame(), true));
     }
 
     @Override
     public void looseGame() {
-
+        getGame().setGameState(new GameOver(getGame(), false));
     }
 
     @Override
@@ -69,15 +76,10 @@ public abstract class AbstractState implements State{
     }
 
     @Override
-    public void key_SPACE() {
-        System.out.println("KEY SPACE BALL THROWN");
-        ballController.throwAway();
-    }
+    public void key_SPACE(){}
 
     @Override
-    public void key_N() {
-
-    }
+    public void key_N() {}
 
     @Override
     public void rightWall(){
@@ -96,7 +98,21 @@ public abstract class AbstractState implements State{
     }
 
     @Override
-    public void ballDrop(){
+    public void ballDrop(Entity deadBall){
+        Entity player = getGame().getGameWorld().getEntitiesByType(GameFatory.Types.PLAYER).get(0);
+        Entity ball = newBall(player.getX() + 70, player.getY() - 17, new EntityController());
+        ballController = ball.getComponent(EntityController.class);
+        deadBall.removeFromWorld();
+        getGame().setGameState(new StandBy(getGame()));
+    }
 
+    @Override
+    public double genNumberOfBricks(){
+        Random randomObject = new Random();
+        double nBricks = 0;
+        while(!(nBricks >= 30 && nBricks < 50)){
+            nBricks = randomObject.nextDouble()*100;
+        }
+        return nBricks;
     }
 }

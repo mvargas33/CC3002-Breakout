@@ -4,9 +4,11 @@ import com.almasb.fxgl.app.GameApplication;
 import ui.App;
 
 public class GameOver extends AbstractState{
+    private boolean gameIsWon;
 
-    public GameOver(App game){
+    public GameOver(App game, boolean gameIsWon){
         super(game);
+        this.gameIsWon = gameIsWon;
     }
 
 }

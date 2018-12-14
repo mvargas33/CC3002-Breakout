@@ -40,5 +40,7 @@ public interface State {
 
     void leftWall();
 
-    void ballDrop();
+    void ballDrop(Entity deadBall);
+
+    double genNumberOfBricks();
 }
