@@ -184,4 +184,17 @@ public class HomeworkTwoFacade {
     public boolean winner() {
         return game.winner();
     }
+
+    public int numberOfLevels(){
+        int n = 0;
+        Level l = getCurrentLevel();
+        if(l.isPlayableLevel()){
+            n++;
+        }
+        while(l.hasNextLevel()){
+            n++;
+            l = l.getNextLevel();
+        }
+        return n;
+    }
 }

@@ -22,9 +22,6 @@ public interface State {
 
     void stop();
 
-    void shootBall();
-
-
     void goToNextLevel();
 
     void winGame();

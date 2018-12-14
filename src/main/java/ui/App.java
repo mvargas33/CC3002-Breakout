@@ -75,8 +75,9 @@ public class App extends GameApplication {
 
         input.addAction(new UserAction("New Level") {
             @Override
-            protected void onAction() {
+            protected void onActionBegin() {
                 gameState.key_N();
+                getGameState().setValue("number of levels", facade.numberOfLevels());
             }
         }, KeyCode.N);
 
@@ -120,9 +121,7 @@ public class App extends GameApplication {
                     protected void onHitBoxTrigger(Entity ball, Entity wall, HitBox boxBall, HitBox boxWall) {
                         if (boxWall.getName().equals("BOT")){
                             facade.dropBall();
-                            System.out.println("Number of balls: " + facade.getBallsLeft());
                             if(facade.isGameOver()){
-                                System.out.println("GAME OVER");
                                 gameState.looseGame();return;
                             }
                             gameState.ballDrop(ball);   // And add a new one
@@ -151,13 +150,14 @@ public class App extends GameApplication {
                         if(b.isDestroyed()){
                             UIBrick.removeFromWorld();
                             getGameState().increment("score", +(b.getScore()));
-                            if(facade.getCurrentLevel().getCurrentPoints() == 0){  // Pasamos a otro nivel
+                            if(facade.winner()){
+                                gameState.winGame();
+                            }else if(facade.getCurrentLevel().getCurrentPoints() == 0){  // Pasamos a otro nivel
                                 gameState.goToNextLevel();
+                                getGameState().setValue("actual level", facade.getLevelName());
                             }
                         }
-                        if(facade.winner()){
-                            gameState.winGame();
-                        }
+
                     }
                 }
         );
@@ -167,6 +167,8 @@ public class App extends GameApplication {
     @Override
     protected void initGameVars(Map<String, Object> vars) {
         vars.put("score", 0);
+        vars.put("actual level", "Level 1");
+        vars.put("number of levels", 0);
     }
 
     @Override
@@ -176,9 +178,18 @@ public class App extends GameApplication {
         textScore1.setTranslateY(25);
         textScore1.textProperty().bind(getGameState().intProperty("score").asString());
         getGameScene().addUINodes(textScore1);
+
+        Text level = getUIFactory().newText("7", Color.WHITE, 25);
+        level.setTranslateX(232);
+        level.setTranslateY(25);
+        level.textProperty().bind(getGameState().stringProperty("actual level"));
+        getGameScene().addUINodes(level);
+
+        Text numberLevels = getUIFactory().newText("7", Color.WHITE, 25);
+        numberLevels.setTranslateX(432);
+        numberLevels.setTranslateY(25);
+        numberLevels.textProperty().bind(getGameState().intProperty("number of levels").asString());
+        getGameScene().addUINodes(numberLevels);
     }
 
-    @Override
-    protected void onUpdate(double tpf){
-    }
 }

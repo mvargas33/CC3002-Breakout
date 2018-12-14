@@ -47,28 +47,25 @@ public abstract class AbstractState implements State{
     }
 
     @Override
-    public void shootBall() {
-        ballController.throwAway();
-    }
-
-    @Override
     public void goToNextLevel() {
         getGame().getGameWorld().getEntitiesByType(GameFatory.Types.BRICK).forEach(e -> e.removeFromWorld());   // Remove metal bricks
         getGame().setActualLevelBricks(linkBricks(getGame().getFacade().getBricks()));
+        game.getGameState().setValue("actual level", game.getFacade().getLevelName());
         getGame().setGameState(new StandBy(getGame())); // Go to StandBy State
     }
 
     @Override
     public void winGame() {
+        playerController.stop();
+        playerController.blockLeft();
+        playerController.blockRight();
+        ballController.stop();
         getGame().setGameState(new GameOver(getGame(), true));
     }
 
     @Override
     public void looseGame() {
-        playerController.stop();
-        playerController.blockLeft();
-        playerController.blockRight();
-        ballController.stop();
+        winGame();
         getGame().setGameState(new GameOver(getGame(), false));
     }
 
@@ -83,6 +80,7 @@ public abstract class AbstractState implements State{
     @Override
     public void key_N(){
         double nBricks = genNumberOfBricks();
+        getGame().setNivelNumero(getGame().getNivelNumero() + 1);
         getGame().getFacade().addPlayingLevel(getGame().getFacade().newLevelWithBricksFull("Level " + getGame().getNivelNumero(), (int)nBricks, new Random().nextDouble(), nBricks/100, 0));
     }
     @Override
