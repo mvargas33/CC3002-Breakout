@@ -9,14 +9,10 @@ import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
-import facade.HomeworkTwoFacade;
-import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import logic.brick.*;
-import logic.level.Level;
-import logic.level.RealLevel;
 
 import java.util.*;
 
@@ -40,7 +36,7 @@ public final class GameFatory {
             if(i%30 == 0){
                 j++;i=0;
             }
-            Entity ball = newBall(width - 32 - 25 + 25*i, 5 + 25*j, false);
+            Entity ball = newBall(width - 32 - 25 + 25*i, 5 + 25*j, new EntityController());
             i--;
         }
     }
@@ -82,7 +78,7 @@ public final class GameFatory {
                 .buildAndAttach();
     }
 
-    public static Entity newPlayer(double x, double y, PlayerControl playerControl){
+    public static Entity newPlayer(double x, double y, EntityController entityController){
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.KINEMATIC);
         return Entities.builder()
@@ -91,8 +87,8 @@ public final class GameFatory {
                 .bbox(new HitBox("Player",BoundingShape.box(150, 30)))
                 .viewFromNode(new Rectangle(150, 57, Color.BLUE))
                 .viewFromTexture("strawhat.png")
-                .with(physics, new CollidableComponent(true), playerControl)
-                .build();
+                .with(physics, new CollidableComponent(true), entityController)
+                .buildAndAttach();
     }
 
     public static Entity newBackground(double width, double height){
@@ -100,20 +96,20 @@ public final class GameFatory {
                 .viewFromNode(new Rectangle(width, height, Color.BLACK))
                 .viewFromTexture("sunny-1100x700.png")
                 .renderLayer(RenderLayer.BACKGROUND)
-                .build();
+                .buildAndAttach();
     }
 
-    public static Entity newBall(double x, double y, boolean withSpeed){
+    public static Entity newBall(double x, double y, EntityController entityController){
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
         physics.setFixtureDef(
                 new FixtureDef().restitution(1f).density(0.1f).friction(0f)
         );
-        if(withSpeed){
+        /*if(withSpeed){
             physics.setOnPhysicsInitialized(
                     () -> physics.setLinearVelocity(200*(new Random().nextDouble()-0.5), -200)
             );
-        }
+        }*/
 
         return Entities.builder()
                 .at(x,y)
@@ -121,7 +117,7 @@ public final class GameFatory {
                 .bbox(new HitBox("Ball", BoundingShape.circle(10)))
                 .viewFromNode(new Circle(8, Color.LIGHTCORAL))
                 .viewFromTexture("logpose.png")
-                .with(physics, new CollidableComponent(true))
+                .with(physics, new CollidableComponent(true), entityController)
                 .buildAndAttach();
     }
 

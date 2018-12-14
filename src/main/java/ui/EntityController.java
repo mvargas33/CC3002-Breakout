@@ -1,17 +1,20 @@
 package ui;
 
+import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.entity.components.ViewComponent;
 import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 
-public class PlayerControl extends Component {
+import java.util.Random;
+
+public class EntityController extends Component {
     private ViewComponent view;
     private PhysicsComponent physics;
     private boolean moveLeft;
     private boolean moveRight;
 
-    public PlayerControl(){
+    public EntityController(){
         moveLeft = true;
         moveRight = true;
     }
@@ -50,5 +53,9 @@ public class PlayerControl extends Component {
 
     public void unblockLeft(){
         moveLeft = true;
+    }
+
+    public void throwAway(){
+        physics.setLinearVelocity(200*(new Random().nextDouble()-0.5), -200);
     }
 }

@@ -11,29 +11,32 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import logic.brick.*;
-import logic.level.Level;
-import logic.level.RealLevel;
+import ui.GameStates.*;
 
 import java.util.*;
 
 import static ui.GameFatory.*;
 
-public class Aplicacion extends GameApplication {
+public class App extends GameApplication {
     private int width = 1100;
     private int heigth = 700;
     private int nivelNumero = 1;
     private boolean levelStarted = false;
     private boolean isThisFirstLevel = true;
     private Entity player;
-    private PlayerControl playerControl;
     private HashMap<Entity, Brick> actualLevelBricks;
     private HomeworkTwoFacade facade;
+    private State gameState;
+
+    public void setGameState(State newstate){
+        this.gameState = newstate;
+    }
 
     @Override
     protected void initSettings(GameSettings gameSettings) {
         gameSettings.setWidth(width);
         gameSettings.setHeight(heigth);
-        gameSettings.setTitle("|");
+        gameSettings.setTitle("One piece Breakout");
         gameSettings.setVersion("");
     }
 
@@ -43,23 +46,14 @@ public class Aplicacion extends GameApplication {
 
     @Override
     protected void initGame(){
-        /* EMPTY GAME */
-        facade = new HomeworkTwoFacade();
-        playerControl = new PlayerControl();
-        playerControl.blockLeft();playerControl.blockRight();
-        player = newPlayer(width/2.0 - 75,630, playerControl);    // Platform 150*30
+        Entity player = newPlayer(width/2.0 - 75,630, new EntityController());    // Platform 150*30
+        Entity ball = newBall(player.getX() + 70,player.getY() - 17, new EntityController());// Symbolic ball
         Entity bg = newBackground(width, heigth);                       // Background
-        Entity ball = newBall(player.getX() + 70,player.getY() - 17, false);// Symbolic ball
         Entity walls = newWalls();                                      // Screen collidable walls
-        getGameWorld().addEntities(bg, player, walls);
-        updateBalls(facade.getBallsLeft(), width);
-        /* EMPTY GAME */
-/*
-        List<Entity> bricks = bricksToEntities(new RealLevel("Level 1", 40, 0.5, 0).getBricks());
-        for(Entity br : bricks){
-            getGameWorld().addEntity(br);
-        }
-*/
+        getGameWorld().addEntity(walls);
+        //updateBalls(facade.getBallsLeft(), width);
+        facade = new HomeworkTwoFacade();
+        gameState = new GameStarted(this);
     }
 
     @Override
@@ -79,6 +73,7 @@ public class Aplicacion extends GameApplication {
                     System.out.println(levelBricks.size());
                     actualLevelBricks = linkBricks(levelBricks);
                     isThisFirstLevel = false;
+                    gameState.key_N();
                 }else{
                     facade.addPlayingLevel(facade.newLevelWithBricksFull("Level " + nivelNumero, (int)nBricks, randomObject.nextDouble(), nBricks/100, 0));
                 }
@@ -90,36 +85,39 @@ public class Aplicacion extends GameApplication {
             @Override
             protected void onAction() {
                 //System.out.println("Barra espaciadora!!");
-                if(!levelStarted){
+                /*if(!levelStarted){
                     getGameWorld().getEntitiesByType(Types.BALL).forEach(Entity::removeFromWorld);
                     List<Entity> p = getGameWorld().getEntitiesByType(Types.PLAYER);
-                    Entity ball = newBall(p.get(0).getX() + 70,p.get(0).getY() - 17, true);
+                    Entity ball = newBall(p.get(0).getX() + 70,p.get(0).getY() - 17, false);
+
                     levelStarted = true;
-                    playerControl.unblockLeft();
-                    playerControl.unblockRight();
-                }
+                    //entityController.unblockLeft();
+                    //entityController.unblockRight();
+
+                }*/
+                gameState.key_SPACE();
             }
         }, KeyCode.SPACE);
 
         input.addAction(new UserAction("Move Right"){
             @Override
             protected void onAction(){
-                playerControl.right();
+                gameState.moveRight();
             }
             @Override
             protected void onActionEnd() {
-                playerControl.stop();
+                gameState.stop();
             }
         }, KeyCode.D);
 
         input.addAction(new UserAction("Move Left"){
             @Override
             protected void onAction(){
-                playerControl.left();
+                gameState.moveLeft();
             }
             @Override
             protected void onActionEnd() {
-                playerControl.stop();
+                gameState.stop();
             }
         }, KeyCode.A);
     }
@@ -137,12 +135,13 @@ public class Aplicacion extends GameApplication {
                             facade.dropBall();
                             if(facade.getBallsLeft() > 0) {
                                 levelStarted = false;
-                                Entity s_ball = newBall(player.getX() + 70, player.getY() - 17, false);// Symbolic ball
-                                playerControl.stop();
-                                playerControl.blockRight();
-                                playerControl.blockLeft();
+                                gameState.ballDrop();
+                                Entity s_ball = newBall(player.getX() + 70, player.getY() - 17, new EntityController());// Symbolic ball
+                                //entityController.stop();
+                                //entityController.blockRight();
+                                //entityController.blockLeft();
                             }else{
-                                // GAME OVER
+                                gameState.looseGame();
                             }
                         }
                     }
@@ -160,11 +159,14 @@ public class Aplicacion extends GameApplication {
                     @Override
                     protected void onHitBoxTrigger(Entity player, Entity wall, HitBox boxPlayer, HitBox boxWall) {
                         if (boxWall.getName().equals("RIGHT")){
-                            playerControl.blockRight();
-                            playerControl.stop();
+                            gameState.rightWall();
+                            //entityController.blockRight();
+                            //entityController.stop();
                         }else if (boxWall.getName().equals("LEFT")){
-                            playerControl.blockLeft();
-                            playerControl.stop();
+                            //System.out.println("LEFT WALL IN CONTRLLES");
+                            gameState.leftWall();
+                            //entityController.blockLeft();
+                            //entityController.stop();
                         }
                     }
                 }
@@ -204,8 +206,8 @@ public class Aplicacion extends GameApplication {
 
  /*d       System.out.println(player.getX());
         double currentPositionX = player.getX();
-        if (currentPositionX <= 0.0) playerControl.blockLeft();
-        if (currentPositionX >= getWidth()) playerControl.blockRight();
+        if (currentPositionX <= 0.0) entityController.blockLeft();
+        if (currentPositionX >= getWidth()) entityController.blockRight();
 */
     }
 }
