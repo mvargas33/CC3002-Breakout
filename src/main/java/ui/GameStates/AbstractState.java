@@ -110,7 +110,7 @@ public abstract class AbstractState implements State{
     public double genNumberOfBricks(){
         Random randomObject = new Random();
         double nBricks = 0;
-        while(!(nBricks >= 3 && nBricks < 5)){
+        while(!(nBricks >= 30 && nBricks < 50)){
             nBricks = randomObject.nextDouble()*100;
         }
         return nBricks;
