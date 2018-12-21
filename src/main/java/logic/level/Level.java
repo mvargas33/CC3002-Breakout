@@ -3,6 +3,7 @@ package logic.level;
 import logic.brick.*;
 import logic.visitor.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observer;
 
@@ -82,4 +83,52 @@ public interface Level extends Visitor,Observer {
      * @param level the next level of a level object
      */
     void setNextLevel(Level level);
+
+    /* Metodos adicionales */
+
+    /**
+     * Añade un obbserver a la lista de obserevers del nivel
+     * @param o : Observer a agregar
+     */
+    void addRealObserver(Observer o);
+
+    /**
+     * Suma a 'obtainablePoins' los puntos específicados.
+     * Utilizado en el constructor de RealLevel.
+     * @param points: puntos a sumar
+     */
+    void sumToObtainablePoints(int points);
+
+    /**
+     * Suma a 'currentPonts' los puntos específicados.
+     * Utilizado al destruirse un bloque en las visitas a los bloques.
+     * @param points: puntos a sumar
+     */
+    void sumToCurrentPoints(int points);
+
+    /**
+     * Impone la lista de Bricks sobre el nivel
+     * @param listaBricks: lista de Bricks a imponer
+     */
+    void setLevelBricks(ArrayList<Brick> listaBricks);
+
+    /**
+     * Impone el nombre a utilizar por un Nivel
+     * @param name: nombre a imponer
+     */
+    void setName(String name);
+
+    /**
+     * Retorna true si el último Brick destruido en el nivel fue de metal.
+     * Utilizado en la notificación de Level a Game para ver condición de bolas extra
+     * @return variable 'lastBrickWasMetal' del nivel
+     */
+    boolean isLastBrickMetal();
+
+    /**
+     * Declara con 'valor' la variable 'lastBrickWasMetal' que guarda si el último birck destruido fue de metal.
+     * @param valor: valor a setear 'lastBrickWasMetal'
+     */
+    void setLastBrickWasMetal(boolean valor);
+
 }

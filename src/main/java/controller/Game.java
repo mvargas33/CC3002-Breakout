@@ -107,7 +107,7 @@ public class Game implements Observer{
     public void setCurrentLevel(Level level){
         this.globalPoints += currentLevel.getCurrentPoints();
         this.currentLevel = level;
-        ((RealLevel) level).addObserver(this);
+        level.addRealObserver(this);
     }
 
     /**

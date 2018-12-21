@@ -173,8 +173,13 @@ public class App extends GameApplication {
 
     @Override
     protected void initUI() {
+        Text scoreWord = getUIFactory().newText("SCORE", Color.WHITE,  25);
+        scoreWord.setTranslateX(32);
+        scoreWord.setTranslateY(25);
+        getGameScene().addUINodes(scoreWord);
+
         Text textScore1 = getUIFactory().newText("7", Color.WHITE, 25);
-        textScore1.setTranslateX(32);
+        textScore1.setTranslateX(32 + 120);
         textScore1.setTranslateY(25);
         textScore1.textProperty().bind(getGameState().intProperty("score").asString());
         getGameScene().addUINodes(textScore1);
@@ -190,6 +195,8 @@ public class App extends GameApplication {
         numberLevels.setTranslateY(25);
         numberLevels.textProperty().bind(getGameState().intProperty("number of levels").asString());
         getGameScene().addUINodes(numberLevels);
+
+
     }
 
 }
