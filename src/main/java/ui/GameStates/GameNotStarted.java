@@ -28,6 +28,7 @@ public class GameNotStarted extends StandBy{
         double nBricks = super.genNumberOfBricks();
         getGame().getFacade().setCurrentLevel(getGame().getFacade().newLevelWithBricksFull("Level " + getGame().getNivelNumero(), (int)nBricks, new Random().nextDouble(), nBricks/100, 0));
         getGame().setActualLevelBricks(linkBricks(getGame().getFacade().getBricks()));
+        getGame().getGameState().setValue("actual level", getGame().getFacade().getLevelName());
         getGame().setGameState(new StandBy(getGame())); // Go to StandBy State
     }
 }

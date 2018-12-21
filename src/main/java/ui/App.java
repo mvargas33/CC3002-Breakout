@@ -1,6 +1,7 @@
 package ui;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.GameWorld;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
@@ -25,6 +26,14 @@ public class App extends GameApplication {
     private HomeworkTwoFacade facade;
     private State gameState;
 
+    public int getAppWidth(){
+        return width;
+    }
+
+    public int getAppHeigth(){
+        return heigth;
+    }
+
     public void setGameState(State newstate){
         this.gameState = newstate;
     }
@@ -32,6 +41,7 @@ public class App extends GameApplication {
     public HomeworkTwoFacade getFacade(){
         return facade;
     }
+    public void setFacade(HomeworkTwoFacade f){ facade = f;}
 
     public int getNivelNumero(){
         return nivelNumero;
@@ -64,9 +74,9 @@ public class App extends GameApplication {
         Entity bg = newBackground(width, heigth);                       // Background
         Entity walls = newWalls();                                      // Screen collidable walls
         getGameWorld().addEntity(walls);
-        //updateBalls(facade.getBallsLeft(), width);
         facade = new HomeworkTwoFacade();
         gameState = new GameNotStarted(this);
+        updateBalls(facade.getBallsLeft(), width);
     }
 
     @Override
@@ -77,7 +87,8 @@ public class App extends GameApplication {
             @Override
             protected void onActionBegin() {
                 gameState.key_N();
-                getGameState().setValue("number of levels", facade.numberOfLevels());
+                getGameState().increment("levels to play", +1);
+                //getGameState().setValue("number of levels", facade.numberOfLevels());
             }
         }, KeyCode.N);
 
@@ -109,11 +120,18 @@ public class App extends GameApplication {
                 gameState.stop();
             }
         }, KeyCode.A);
+
+        input.addAction(new UserAction("Restart game") {
+            @Override
+            protected void onActionBegin() {
+                gameState.restartGame();
+            }
+        }, KeyCode.R);
     }
 
     @Override
     protected void initPhysics(){
-        getPhysicsWorld().setGravity(0.3,0.3);
+        getPhysicsWorld().setGravity(0,0.1f);
 
         getPhysicsWorld().addCollisionHandler(
                 new CollisionHandler(Types.BALL, Types.WALL) {
@@ -121,6 +139,11 @@ public class App extends GameApplication {
                     protected void onHitBoxTrigger(Entity ball, Entity wall, HitBox boxBall, HitBox boxWall) {
                         if (boxWall.getName().equals("BOT")){
                             facade.dropBall();
+                            ArrayList<Entity> b = (ArrayList<Entity>) getGameWorld().getEntitiesByType(Types.SYMBOLIC_BALL);
+                            for(Entity balll : b){
+                                balll.removeFromWorld();
+                            }
+                            updateBalls(facade.getBallsLeft(), width);
                             if(facade.isGameOver()){
                                 gameState.looseGame();return;
                             }
@@ -149,15 +172,19 @@ public class App extends GameApplication {
                         b.hit();
                         if(b.isDestroyed()){
                             UIBrick.removeFromWorld();
-                            getGameState().increment("score", +(b.getScore()));
+                            getGameState().setValue("level score", facade.getCurrentLevel().getCurrentPoints());
+                            getGameState().setValue("total score", facade.getCurrentPoints());
                             if(facade.winner()){
+                                getGameState().increment("won levels", +1);
+                                getGameState().increment("levels to play", -1);
                                 gameState.winGame();
                             }else if(facade.getCurrentLevel().getCurrentPoints() == 0){  // Pasamos a otro nivel
                                 gameState.goToNextLevel();
+                                getGameState().increment("won levels", +1);
+                                getGameState().increment("levels to play", -1);
                                 getGameState().setValue("actual level", facade.getLevelName());
                             }
                         }
-
                     }
                 }
         );
@@ -166,37 +193,77 @@ public class App extends GameApplication {
 
     @Override
     protected void initGameVars(Map<String, Object> vars) {
-        vars.put("score", 0);
-        vars.put("actual level", "Level 1");
-        vars.put("number of levels", 0);
+        vars.put("total score", 0);         // Puntaje total
+        vars.put("level score", 0);         // Puntaje del nivel actual
+        vars.put("actual level", "Level 0");// Nombre del nivel actual
+        vars.put("won levels", 0);          // Niveles ganados
+        vars.put("levels to play", 0);      // Niveles por jugar
+        vars.put("popup", "");
     }
 
     @Override
     protected void initUI() {
-        Text scoreWord = getUIFactory().newText("SCORE", Color.WHITE,  25);
-        scoreWord.setTranslateX(32);
-        scoreWord.setTranslateY(25);
-        getGameScene().addUINodes(scoreWord);
+        // TOTAL SCORE
+        Text totalScoreWord = getUIFactory().newText("TOTAL SCORE", Color.WHITE,  20);
+        totalScoreWord.setTranslateX(32);
+        totalScoreWord.setTranslateY(20);   // Arriba
+        getGameScene().addUINodes(totalScoreWord);
 
-        Text textScore1 = getUIFactory().newText("7", Color.WHITE, 25);
-        textScore1.setTranslateX(32 + 120);
-        textScore1.setTranslateY(25);
-        textScore1.textProperty().bind(getGameState().intProperty("score").asString());
-        getGameScene().addUINodes(textScore1);
+        Text totalScore = getUIFactory().newText("7", Color.WHITE, 20);
+        totalScore.setTranslateX(32 + 150);
+        totalScore.setTranslateY(20);  // Arriba
+        totalScore.textProperty().bind(getGameState().intProperty("total score").asString());
+        getGameScene().addUINodes(totalScore);
 
-        Text level = getUIFactory().newText("7", Color.WHITE, 25);
-        level.setTranslateX(232);
-        level.setTranslateY(25);
+        // LEVEL SCORE
+        Text levelSocreWord = getUIFactory().newText("LEVEL SCORE", Color.WHITE,  20);
+        levelSocreWord.setTranslateX(32);
+        levelSocreWord.setTranslateY(20 +20);   // Arriba
+        getGameScene().addUINodes(levelSocreWord);
+
+        Text levelScore = getUIFactory().newText("7", Color.WHITE, 20);
+        levelScore.setTranslateX(32 + 150);
+        levelScore.setTranslateY(20 + 20);  // Abajo
+        levelScore.textProperty().bind(getGameState().intProperty("level score").asString());
+        getGameScene().addUINodes(levelScore);
+
+        // LEVEL NAME
+        Text level = getUIFactory().newText("7", Color.WHITE, 20);
+        level.setTranslateX(32 + 120 + 20 + 120 + 20);
+        level.setTranslateY(20);
         level.textProperty().bind(getGameState().stringProperty("actual level"));
         getGameScene().addUINodes(level);
 
-        Text numberLevels = getUIFactory().newText("7", Color.WHITE, 25);
-        numberLevels.setTranslateX(432);
-        numberLevels.setTranslateY(25);
-        numberLevels.textProperty().bind(getGameState().intProperty("number of levels").asString());
-        getGameScene().addUINodes(numberLevels);
+        // WON LEVELS
+        Text wonLevelsWord = getUIFactory().newText("WON LEVELS", Color.WHITE,  20);
+        wonLevelsWord.setTranslateX(32 + 120 + 20 + 120 + 20 + 120);
+        wonLevelsWord.setTranslateY(20);   // Arriba
+        getGameScene().addUINodes(wonLevelsWord);
 
+        Text wonLevels = getUIFactory().newText("7", Color.WHITE, 20);
+        wonLevels.setTranslateX(32 + 120 + 20 + 120 + 20 + 120 + 150);
+        wonLevels.setTranslateY(20);  // Arriba
+        wonLevels.textProperty().bind(getGameState().intProperty("won levels").asString());
+        getGameScene().addUINodes(wonLevels);
 
+        // LEVELS TO PLAY
+        Text levelsLeftWord = getUIFactory().newText("LEVELS LEFT", Color.WHITE,  20);
+        levelsLeftWord.setTranslateX(32 + 120 + 20 + 120 + 20 + 120);
+        levelsLeftWord.setTranslateY(20 + 20);   // Arriba
+        getGameScene().addUINodes(levelsLeftWord);
+
+        Text levelsLeft = getUIFactory().newText("7", Color.WHITE, 20);
+        levelsLeft.setTranslateX(32 + 120 + 20 + 120 + 20 + 120 + 150);
+        levelsLeft.setTranslateY(20 + 20);  // Abajo
+        levelsLeft.textProperty().bind(getGameState().intProperty("levels to play").asString());
+        getGameScene().addUINodes(levelsLeft);
+
+        // PUPUP MESSAGE
+        Text popUpWord = getUIFactory().newText("GAME OVER", Color.WHITE,  100);
+        popUpWord.setTranslateX(250);
+        popUpWord.setTranslateY(350);
+        popUpWord.textProperty().bind(getGameState().stringProperty("popup"));
+        getGameScene().addUINodes(popUpWord);
     }
 
 }

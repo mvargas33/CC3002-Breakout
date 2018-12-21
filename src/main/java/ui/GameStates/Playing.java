@@ -114,4 +114,9 @@ public class Playing implements State{
         return nBricks;
     }
 
+    @Override
+    public void restartGame() {
+
+    }
+
 }

@@ -2,6 +2,7 @@ package ui;
 
 import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.GameWorld;
 import com.almasb.fxgl.entity.RenderLayer;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
@@ -21,7 +22,8 @@ public final class GameFatory {
         PLAYER,
         BALL,
         WALL,
-        BRICK
+        BRICK,
+        SYMBOLIC_BALL
     }
 /*
     public static void addFullLevel(int number, HomeworkTwoFacade facade){
@@ -33,10 +35,13 @@ public final class GameFatory {
         int i = 0;
         int j = -1;
         for(int q = 0; q < cuantity; q++){
-            if(i%30 == 0){
+            if(i%15 == 0){
                 j++;i=0;
             }
-            Entity ball = newBall(width - 32 - 25 + 25*i, 5 + 25*j, new EntityController());
+            if (j == 2){    // Sólo se pueden dibujar hasta 60 balls
+                break;
+            }
+            Entity symbolicBall = newSymbolicBall(width - 32 - 25 + 25*i, 5 + 25*j);
             i--;
         }
     }
@@ -103,7 +108,7 @@ public final class GameFatory {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
         physics.setFixtureDef(
-                new FixtureDef().restitution(1f).density(0.1f).friction(0f)
+                new FixtureDef().restitution(1f).density(0f).friction(0f)
         );
         /*if(withSpeed){
             physics.setOnPhysicsInitialized(
@@ -118,6 +123,16 @@ public final class GameFatory {
                 .viewFromNode(new Circle(8, Color.LIGHTCORAL))
                 .viewFromTexture("logpose.png")
                 .with(physics, new CollidableComponent(true), entityController)
+                .buildAndAttach();
+    }
+
+    public static Entity newSymbolicBall(double x, double y){
+        return Entities.builder()
+                .at(x,y)
+                .type(Types.SYMBOLIC_BALL)
+                .viewFromNode(new Circle(8, Color.LIGHTCORAL))
+                .viewFromTexture("logpose.png")
+                .with(new CollidableComponent(false))
                 .buildAndAttach();
     }
 

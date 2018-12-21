@@ -39,4 +39,6 @@ public interface State {
     void ballDrop(Entity deadBall);
 
     double genNumberOfBricks();
+
+    void restartGame();
 }
