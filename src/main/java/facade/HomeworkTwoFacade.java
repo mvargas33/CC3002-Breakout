@@ -18,7 +18,7 @@ public class HomeworkTwoFacade {
      *
      * @see Game
      */
-    public Game game = new Game(3);
+    public Game game = new Game(30);
 
     /**
      * Creates a new level with the given parameters.

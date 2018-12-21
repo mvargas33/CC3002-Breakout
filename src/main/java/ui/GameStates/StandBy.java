@@ -9,7 +9,7 @@ import java.util.Random;
 
 import static ui.GameFatory.linkBricks;
 
-public class StandBy extends AbstractState {
+public class StandBy extends Playing {
 
     public StandBy(App game){
         super(game);
