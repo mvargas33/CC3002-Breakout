@@ -162,12 +162,21 @@ public class App extends GameApplication {
                 }
         );
         getPhysicsWorld().addCollisionHandler(
+                new CollisionHandler(Types.PLAYER, Types.BALL) {
+                    @Override
+                    protected void onCollisionBegin(Entity a, Entity b) {
+                        getAudioPlayer().playSound("bounce.wav");
+                    }
+                }
+        );
+        getPhysicsWorld().addCollisionHandler(
                 new CollisionHandler(Types.BALL, Types.BRICK) {
                     @Override
-                    protected void onCollision(Entity ball, Entity UIBrick) {
+                    protected void onCollisionBegin(Entity ball, Entity UIBrick) {
                         Brick b = actualLevelBricks.get(UIBrick);
                         b.hit();
                         if(b.isDestroyed()){
+                            getAudioPlayer().playSound("destroy.wav");
                             UIBrick.removeFromWorld();
                             getGameState().setValue("level score", facade.getCurrentLevel().getCurrentPoints());
                             getGameState().setValue("total score", facade.getCurrentPoints());
@@ -177,18 +186,26 @@ public class App extends GameApplication {
                                 getGameState().increment("levels to play", -1);
                                 gameState.winGame();
                             }else if(facade.getCurrentLevel().getCurrentPoints() == 0){  // Pasamos a otro nivel
-                                gameState.goToNextLevel();
+                                gameState.goToNextLevel(getGameWorld().getEntitiesByType(GameFatory.Types.BALL).get(0));
                                 getGameState().increment("won levels", +1);
                                 getGameState().increment("levels to play", -1);
                                 getGameState().setValue("actual level", facade.getLevelName());
                             }
+                            return;
+                        }
+                        if(b.isMetalBrick()){
+                            getAudioPlayer().playSound("metal.wav");
+                        }else if(b.isWoodenBrick()){
+                            getAudioPlayer().playSound("wood.wav");
+                        }else if(b.isGlassBrick()){
+                            getAudioPlayer().playSound("glass.wav");
                         }
                     }
                 }
         );
 
     }
-    private void updateBalls(int cuantity, int width){
+    public void updateBalls(int cuantity, int width){
         ArrayList<Entity> b = (ArrayList<Entity>) getGameWorld().getEntitiesByType(Types.SYMBOLIC_BALL);
         for(Entity balll : b){
             balll.removeFromWorld();
@@ -218,6 +235,7 @@ public class App extends GameApplication {
         vars.put("won levels", 0);          // Niveles ganados
         vars.put("levels to play", 0);      // Niveles por jugar
         vars.put("popup", "");              // Popup message
+        vars.put("restart","");             // Restart popup
         vars.put("lives", 0);               // Lives
     }
 
@@ -278,12 +296,18 @@ public class App extends GameApplication {
         levelsLeft.textProperty().bind(getGameState().intProperty("levels to play").asString());
         getGameScene().addUINodes(levelsLeft);
 
-        // PUPUP MESSAGE
+        // PUPUP MESSAGES
         Text popUpWord = getUIFactory().newText("GAME OVER", Color.WHITE,  100);
         popUpWord.setTranslateX(250);
         popUpWord.setTranslateY(350);
         popUpWord.textProperty().bind(getGameState().stringProperty("popup"));
         getGameScene().addUINodes(popUpWord);
+
+        Text popUpRestartWord = getUIFactory().newText("PRESS 'R' TO RESTART", Color.WHITE,  30);
+        popUpRestartWord.setTranslateX(250 + 140);
+        popUpRestartWord.setTranslateY(350 + 50);
+        popUpRestartWord.textProperty().bind(getGameState().stringProperty("restart"));
+        getGameScene().addUINodes(popUpRestartWord);
 
         // LIVES
         Text livesText = getUIFactory().newText("LIVES", Color.WHITE,  20);

@@ -15,17 +15,18 @@ import javax.lang.model.type.TypeKind;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ui.GameFatory.newBall;
-import static ui.GameFatory.newPlayer;
+import static ui.GameFatory.*;
 
 public class GameOver extends Playing{
 
     public GameOver(App game, boolean gameIsWon){
         super(game);
         if(gameIsWon){
-            getGame().getGameState().setValue("popup", " YOU WIN!");
+            getGame().getGameState().setValue("popup", "   YOU WIN!");
+            getGame().getGameState().setValue("restart", "PRESS 'R' TO RESTART");
         }else{
             getGame().getGameState().setValue("popup", "GAME OVER");
+            getGame().getGameState().setValue("restart", "PRESS 'R' TO RESTART");
         }
     }
 
@@ -50,7 +51,12 @@ public class GameOver extends Playing{
         for(Entity brick : bricks){
             brick.removeFromWorld();
         }
+        ArrayList<Entity> wallss = (ArrayList<Entity>) gameWorld.getEntitiesByType(GameFatory.Types.WALL);
+        for(Entity wall : wallss){
+            wall.removeFromWorld();
+        }
         gameWorld.getEntitiesByType(GameFatory.Types.PLAYER).get(0).removeFromWorld();
+
         getGame().setFacade(new HomeworkTwoFacade());   // Reset logic
         getGame().getGameState().setValue("total score",getGame().getFacade().getCurrentPoints());
         getGame().getGameState().setValue("level score",getGame().getFacade().getCurrentLevel().getCurrentPoints());
@@ -58,11 +64,14 @@ public class GameOver extends Playing{
         getGame().getGameState().setValue("won levels",0);
         getGame().getGameState().setValue("levels to play",0);
         getGame().getGameState().setValue("popup", "");
+        getGame().getGameState().setValue("restart", "");
+
 
         Entity player = newPlayer(getGame().getWidth()/2.0 - 75,630, new EntityController());// Platform 150*30
         Entity ball = newBall(player.getX() + 70,player.getY() - 17, new EntityController());// Symbolic ball
-
-
+        Entity walls = newWalls();
+        getGame().getGameWorld().addEntity(walls);
+        getGame().updateBalls(getGame().getFacade().getBallsLeft(), getGame().getAppWidth());
         getGame().setGameState(new GameNotStarted(getGame()));
     }
 }

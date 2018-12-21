@@ -33,6 +33,7 @@ public class Playing implements State{
     protected EntityController getBallController(){
         return ballController;
     }
+    public void setBallController(EntityController ec){ ballController = ec;}
 
     @Override
     public void moveRight() {
@@ -45,11 +46,11 @@ public class Playing implements State{
     }
 
     @Override
-    public void goToNextLevel() {
+    public void goToNextLevel(Entity deadBall) {
         getGame().getGameWorld().getEntitiesByType(GameFatory.Types.BRICK).forEach(e -> e.removeFromWorld());   // Remove metal bricks
         getGame().setActualLevelBricks(linkBricks(getGame().getFacade().getBricks()));
         game.getGameState().setValue("actual level", game.getFacade().getLevelName());
-        getGame().setGameState(new StandBy(getGame())); // Go to StandBy State
+        ballDrop(deadBall);
     }
 
     @Override

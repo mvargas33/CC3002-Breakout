@@ -22,7 +22,7 @@ public interface State {
 
     void stop();
 
-    void goToNextLevel();
+    void goToNextLevel(Entity deadBall);
 
     void winGame();
 
