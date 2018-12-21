@@ -30,7 +30,7 @@ public final class GameFatory {
         Random randomObject = new Random();
         facade.addPlayingLevel(facade.newLevelWithBricksFull("Level " + number, 80, randomObject.nextDouble(), randomObject.nextDouble(), 0));
     }
-*/
+
     public static void updateBalls(int cuantity, int width){
         int i = 0;
         int j = -1;
@@ -45,7 +45,7 @@ public final class GameFatory {
             i--;
         }
     }
-
+*/
     public static HashMap<Entity, Brick> linkBricks(List<Brick> bricks){
         Collections.shuffle(bricks);
         HashMap<Entity, Brick> map = new HashMap<>();

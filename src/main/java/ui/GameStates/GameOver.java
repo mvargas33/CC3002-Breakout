@@ -19,12 +19,9 @@ import static ui.GameFatory.newBall;
 import static ui.GameFatory.newPlayer;
 
 public class GameOver extends Playing{
-    private boolean gameIsWon;
-
 
     public GameOver(App game, boolean gameIsWon){
         super(game);
-        this.gameIsWon = gameIsWon;
         if(gameIsWon){
             getGame().getGameState().setValue("popup", " YOU WIN!");
         }else{

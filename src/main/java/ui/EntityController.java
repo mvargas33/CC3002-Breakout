@@ -68,6 +68,6 @@ public class EntityController extends Component {
     }
 
     public void throwAway(){
-        physics.setLinearVelocity(200*(new Random().nextDouble()+0.5), -200);
+        physics.setLinearVelocity(185*(new Random().nextDouble()-0.5), -185);
     }
 }
