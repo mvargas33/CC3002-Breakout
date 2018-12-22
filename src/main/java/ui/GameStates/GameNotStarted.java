@@ -3,7 +3,8 @@ package ui.GameStates;
 import java.util.Random;
 
 import ui.App;
-import static ui.GameFactory.linkBricks;
+
+import static ui.App.linkBricks;
 
 /**
  * Estado base del juego, con el nivel vacío. Sólo se puede pasar al estado de StandBy si se preciona la tecla N.
