@@ -58,5 +58,5 @@ Para ver de mejor forma el flujo de mensajes descrito se adjunta en la raíz del
 
 ## Authors
 
-* **Juan Pablo Silva** - *Algunas interfaces base*
+* **Juan Pablo Silva** - *Interfaces base*
 * **Maximiliano Vargas** - *Lógica del juego, gráfica del juego e implementación*
