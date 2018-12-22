@@ -5,6 +5,7 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.GameWorld;
 import com.almasb.fxgl.entity.RenderLayer;
 import com.almasb.fxgl.entity.components.CollidableComponent;
+import com.almasb.fxgl.entity.components.SelectableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsComponent;
@@ -25,27 +26,7 @@ public final class GameFatory {
         BRICK,
         SYMBOLIC_BALL
     }
-/*
-    public static void addFullLevel(int number, HomeworkTwoFacade facade){
-        Random randomObject = new Random();
-        facade.addPlayingLevel(facade.newLevelWithBricksFull("Level " + number, 80, randomObject.nextDouble(), randomObject.nextDouble(), 0));
-    }
 
-    public static void updateBalls(int cuantity, int width){
-        int i = 0;
-        int j = -1;
-        for(int q = 0; q < cuantity; q++){
-            if(i%15 == 0){
-                j++;i=0;
-            }
-            if (j == 2){    // Sólo se pueden dibujar hasta 60 balls
-                break;
-            }
-            Entity symbolicBall = newSymbolicBall(width - 32 - 25 + 25*i, 5 + 25*j);
-            i--;
-        }
-    }
-*/
     public static HashMap<Entity, Brick> linkBricks(List<Brick> bricks){
         Collections.shuffle(bricks);
         HashMap<Entity, Brick> map = new HashMap<>();
@@ -56,13 +37,13 @@ public final class GameFatory {
                 j++;i=0;
             }
             if(brick.isGlassBrick()){
-                Entity glassEntity = newBrick(104*i + 32, 34*j, Color.RED, "iceiceice.png");
+                Entity glassEntity = newBrick(104*i + 32, 34*j, Color.RED, "ice.png");
                 map.put(glassEntity, brick);
             }else if(brick.isMetalBrick()){
-                Entity metalEntity = newBrick(104*i + 32, 34*j, Color.DARKGREY, "poneglyph-v5.png");
+                Entity metalEntity = newBrick(104*i + 32, 34*j, Color.DARKGREY, "poneglyph.png");
                 map.put(metalEntity, brick);
             }else if(brick.isWoodenBrick()){
-                Entity woodenEntity = newBrick(104*i + 32, 34*j, Color.GREENYELLOW, "fire-v4.png");
+                Entity woodenEntity = newBrick(104*i + 32, 34*j, Color.GREENYELLOW, "fire.png");
                 map.put(woodenEntity, brick);
             }
             i++;
@@ -73,19 +54,25 @@ public final class GameFatory {
     public static Entity newBrick(double x, double y, Color c, String textura){
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.STATIC);
+        physics.setFixtureDef(
+                new FixtureDef().restitution(0f).density(0f).friction(0f)
+        );
         return Entities.builder()
                 .at(x, y)
                 .type(Types.BRICK)
                 .bbox(new HitBox("Brick",BoundingShape.box(100, 30)))
                 .viewFromNode(new Rectangle(100, 30, c))
                 .viewFromTexture(textura)
-                .with(physics, new CollidableComponent(true))
+                .with(physics, new CollidableComponent(true), new SelectableComponent(true))
                 .buildAndAttach();
     }
 
     public static Entity newPlayer(double x, double y, EntityController entityController){
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.KINEMATIC);
+        physics.setFixtureDef(
+                new FixtureDef().restitution(0f).density(0f).friction(1f)
+        );
         return Entities.builder()
                 .at(x, y)
                 .type(Types.PLAYER)
@@ -108,14 +95,8 @@ public final class GameFatory {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.DYNAMIC);
         physics.setFixtureDef(
-                new FixtureDef().restitution(1f).density(0f).friction(0f)
+                new FixtureDef().restitution(1f).density(1f).friction(1f)
         );
-        /*if(withSpeed){
-            physics.setOnPhysicsInitialized(
-                    () -> physics.setLinearVelocity(200*(new Random().nextDouble()-0.5), -200)
-            );
-        }*/
-
         return Entities.builder()
                 .at(x,y)
                 .type(Types.BALL)
@@ -138,6 +119,9 @@ public final class GameFatory {
 
     public static Entity newWalls() {
         Entity walls = Entities.makeScreenBounds(100);
+        walls.getComponent(PhysicsComponent.class).setFixtureDef(
+            new FixtureDef().restitution(0f).density(0f).friction(0f)
+        );
         walls.setType(Types.WALL);
         walls.addComponent(new CollidableComponent(true));
         return walls;

@@ -9,6 +9,7 @@ import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.settings.GameSettings;
 import facade.HomeworkTwoFacade;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import logic.brick.*;
@@ -67,6 +68,48 @@ public class App extends GameApplication {
         launch(args);
     }
 
+    public void hitUIBrick(Entity UIBrick){
+        Brick b = actualLevelBricks.get(UIBrick);
+        b.hit();
+        if(b.isDestroyed()){
+            getAudioPlayer().playSound("destroy.wav");
+            UIBrick.removeFromWorld();
+            getGameState().setValue("level score", facade.getCurrentLevel().getCurrentPoints());
+            getGameState().setValue("total score", facade.getCurrentPoints());
+            updateBalls(facade.getBallsLeft(), width);
+            if(facade.winner()){
+                getGameState().increment("won levels", +1);
+                getGameState().increment("levels to play", -1);
+                gameState.winGame();
+            }else if(facade.getCurrentLevel().getCurrentPoints() == 0){  // Pasamos a otro nivel
+                gameState.goToNextLevel(getGameWorld().getEntitiesByType(GameFatory.Types.BALL).get(0));
+                getGameState().increment("won levels", +1);
+                getGameState().increment("levels to play", -1);
+                getGameState().setValue("actual level", facade.getLevelName());
+            }
+            return;
+        }
+        if(b.isMetalBrick()){
+            if(b.remainingHits() == 7){
+                UIBrick.setViewFromTexture("poneglyph-1.png");
+            }else if(b.remainingHits() == 5){
+                UIBrick.setViewFromTexture("poneglyph-2.png");
+            }else if(b.remainingHits() == 3){
+                UIBrick.setViewFromTexture("poneglyph-3.png");
+            }
+            getAudioPlayer().playSound("metal.wav");
+        }else if(b.isWoodenBrick()){
+            if(b.remainingHits() == 2){
+                UIBrick.setViewFromTexture("fire-1.png");
+            }else if(b.remainingHits() == 1){
+                UIBrick.setViewFromTexture("fire-2.png");
+            }
+            getAudioPlayer().playSound("wood.wav");
+        }else if(b.isGlassBrick()){
+            getAudioPlayer().playSound("glass.wav");
+        }
+    }
+
     @Override
     protected void initGame(){
         Entity player = newPlayer(width/2.0 - 75,630, new EntityController());    // Platform 150*30
@@ -83,6 +126,16 @@ public class App extends GameApplication {
     @Override
     protected void initInput(){
         Input input = getInput();
+
+        input.addAction(new UserAction("Delete brick") {
+            @Override
+            protected void onAction() {
+                Entity e = getGameWorld().selectedEntityProperty().get();
+                if (e != null && e.isType(Types.BRICK)) {
+                    hitUIBrick(e);
+                }
+            }
+        }, MouseButton.PRIMARY);
 
         input.addAction(new UserAction("New Level") {
             @Override
@@ -155,8 +208,10 @@ public class App extends GameApplication {
                     protected void onHitBoxTrigger(Entity player, Entity wall, HitBox boxPlayer, HitBox boxWall) {
                         if (boxWall.getName().equals("RIGHT")){
                             gameState.rightWall();
+                            getPhysicsWorld().setGravity(-0.1f,0.1f);   // Para evitar bugs
                         }else if (boxWall.getName().equals("LEFT")){
                             gameState.leftWall();
+                            getPhysicsWorld().setGravity(0.1f,0.1f);    // Para evitar bugs
                         }
                     }
                 }
@@ -173,33 +228,7 @@ public class App extends GameApplication {
                 new CollisionHandler(Types.BALL, Types.BRICK) {
                     @Override
                     protected void onCollisionBegin(Entity ball, Entity UIBrick) {
-                        Brick b = actualLevelBricks.get(UIBrick);
-                        b.hit();
-                        if(b.isDestroyed()){
-                            getAudioPlayer().playSound("destroy.wav");
-                            UIBrick.removeFromWorld();
-                            getGameState().setValue("level score", facade.getCurrentLevel().getCurrentPoints());
-                            getGameState().setValue("total score", facade.getCurrentPoints());
-                            updateBalls(facade.getBallsLeft(), width);
-                            if(facade.winner()){
-                                getGameState().increment("won levels", +1);
-                                getGameState().increment("levels to play", -1);
-                                gameState.winGame();
-                            }else if(facade.getCurrentLevel().getCurrentPoints() == 0){  // Pasamos a otro nivel
-                                gameState.goToNextLevel(getGameWorld().getEntitiesByType(GameFatory.Types.BALL).get(0));
-                                getGameState().increment("won levels", +1);
-                                getGameState().increment("levels to play", -1);
-                                getGameState().setValue("actual level", facade.getLevelName());
-                            }
-                            return;
-                        }
-                        if(b.isMetalBrick()){
-                            getAudioPlayer().playSound("metal.wav");
-                        }else if(b.isWoodenBrick()){
-                            getAudioPlayer().playSound("wood.wav");
-                        }else if(b.isGlassBrick()){
-                            getAudioPlayer().playSound("glass.wav");
-                        }
+                        hitUIBrick(UIBrick);
                     }
                 }
         );
