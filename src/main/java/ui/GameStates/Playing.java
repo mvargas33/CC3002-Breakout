@@ -1,25 +1,29 @@
 package ui.GameStates;
 
-import com.almasb.fxgl.app.GameApplication;
-import com.almasb.fxgl.entity.Entity;
-import ui.App;
-import ui.EntityController;
-import ui.GameFatory;
-
 import java.util.Random;
 
-import static ui.GameFatory.linkBricks;
-import static ui.GameFatory.newBall;
+import com.almasb.fxgl.entity.Entity;
+import ui.*;
 
+import static ui.App.linkBricks;
+import static ui.GameFactory.newBall;
+
+/**
+ * Estado principal y base del juego: Se implementan las funciones por default de las acciones de las teclas presionadas,
+ * y de las acciones a realizar por los controladores de las entidades del juego.
+ * Corresponde al estado de estar jugado con una bola en juego. Al perder una bola, ganar o perder el juego, se pasa a nuevo estado.
+ *
+ * @author Maximiliano Vargas
+ */
 public class Playing implements State{
-    private App game;
-    private EntityController playerController;
-    private EntityController ballController;
+    private App game;                           // Game al que pertenece
+    private EntityController playerController;  // Player Controller
+    private EntityController ballController;    // Ball Controller
 
     protected Playing(App g){
         game = g;
-        playerController = getGame().getGameWorld().getEntitiesByType(GameFatory.Types.PLAYER).get(0).getComponent(EntityController.class);
-        ballController = getGame().getGameWorld().getEntitiesByType(GameFatory.Types.BALL).get(0).getComponent(EntityController.class);
+        playerController = getGame().getGameWorld().getEntitiesByType(GameFactory.Types.PLAYER).get(0).getComponent(EntityController.class);
+        ballController = getGame().getGameWorld().getEntitiesByType(GameFactory.Types.BALL).get(0).getComponent(EntityController.class);
     }
 
     protected App getGame(){
@@ -47,7 +51,7 @@ public class Playing implements State{
 
     @Override
     public void goToNextLevel(Entity deadBall) {
-        getGame().getGameWorld().getEntitiesByType(GameFatory.Types.BRICK).forEach(e -> e.removeFromWorld());   // Remove metal bricks
+        getGame().getGameWorld().getEntitiesByType(GameFactory.Types.BRICK).forEach(Entity::removeFromWorld);   // Remove metal bricks
         getGame().setActualLevelBricks(linkBricks(getGame().getFacade().getBricks()));
         game.getGameState().setValue("actual level", game.getFacade().getLevelName());
         ballDrop(deadBall);
@@ -98,7 +102,7 @@ public class Playing implements State{
 
     @Override
     public void ballDrop(Entity deadBall){
-        Entity player = getGame().getGameWorld().getEntitiesByType(GameFatory.Types.PLAYER).get(0);
+        Entity player = getGame().getGameWorld().getEntitiesByType(GameFactory.Types.PLAYER).get(0);
         Entity ball = newBall(player.getX() + 70, player.getY() - 17, new EntityController());
         ballController = ball.getComponent(EntityController.class);
         deadBall.removeFromWorld();

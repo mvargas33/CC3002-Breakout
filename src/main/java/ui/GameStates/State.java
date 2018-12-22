@@ -1,19 +1,14 @@
 package ui.GameStates;
 
-import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.input.Input;
-import com.almasb.fxgl.input.UserAction;
-import com.almasb.fxgl.physics.CollisionHandler;
-import com.almasb.fxgl.physics.HitBox;
-import com.almasb.fxgl.settings.GameSettings;
-import facade.HomeworkTwoFacade;
-import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import logic.brick.*;
-import ui.GameStates.*;
 
+/**
+ * Interfaz base para el State Pattern implemntado para las acciones del jugador. Para evitar cometer acciones bajo
+ * distintos estados de juego, por ejemplo, evitar añadir niveles si el juego está perdido/ganado, o evitar lanzar
+ * una bola si ya hay una en juego.
+ *
+ * @author Maximiliano Vargas
+ */
 public interface State {
 
     void moveRight();

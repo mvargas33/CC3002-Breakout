@@ -121,17 +121,17 @@ public class Game implements Observer{
     @Override
     public void update(Observable observable, Object o) {
         if (observable instanceof RealLevel){
-            if(((RealLevel) observable).getCurrentPoints() == ((RealLevel) observable).getPoints()){
+            if(((RealLevel) observable).getCurrentPoints() == ((RealLevel) observable).getPoints()){ // Actuales == Obtenibles
                 if(!currentLevel.getNextLevel().isPlayableLevel()) {
                     this.winner = true;     // Hay ganador
                     this.isGameOver = true; // Termina el juego
                 }
-                this.goToNextLevel();
+                this.goToNextLevel();       // Si no se avanza de nivel
                 return;
             }
-            if(((RealLevel) observable).isLastBrickMetal()) {
+            if(((RealLevel) observable).isLastBrickMetal()) { // Último Brick destruido fue de metal
                 ((RealLevel) observable).setLastBrickWasMetal(false);
-                this.addBall();
+                this.addBall();             // Añadir bola
             }
         }
 

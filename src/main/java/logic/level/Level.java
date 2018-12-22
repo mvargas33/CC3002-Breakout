@@ -3,14 +3,13 @@ package logic.level;
 import logic.brick.*;
 import logic.visitor.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observer;
+import java.util.*;
 
 /**
- * Interface that represents the basics of a level to be played on.
+ * Interfaz que representa las funciones básicas que debe tener un nivel. En este caso se implmentará el Null Pattern,
+ * por lo cual varios de estos métodos harán nada en un NullLevel, ya que la lógica principal quedará en un RealLevel
  *
- * @author Juan-Pablo Silva
+ * @author Maximiliano Vargas
  */
 public interface Level extends Visitor,Observer {
     /**

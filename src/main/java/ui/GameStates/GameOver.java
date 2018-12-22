@@ -1,22 +1,17 @@
 package ui.GameStates;
 
-import com.almasb.fxgl.app.GameApplication;
-import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.GameWorld;
 import facade.HomeworkTwoFacade;
-import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import ui.App;
-import ui.EntityController;
-import ui.GameFatory;
 
-import javax.lang.model.type.TypeKind;
-import java.util.ArrayList;
-import java.util.List;
+import com.almasb.fxgl.entity.Entity;
+import ui.*;
+import static ui.GameFactory.*;
 
-import static ui.GameFatory.*;
-
+/**
+ * Estado de juego terminado. Evita hacer algunas acciones y muestra un mensaje popUp si el juego está ganado o perdido.
+ * Informa al jugador que con la tecla R se reinicia el juego. El método más importante d esta clase es reiniciar el juego.
+ *
+ * @author Maximiliano Vargas
+ */
 public class GameOver extends Playing{
 
     public GameOver(App game, boolean gameIsWon){
@@ -38,26 +33,13 @@ public class GameOver extends Playing{
 
     @Override
     public void restartGame() {
-        GameWorld gameWorld = getGame().getGameWorld();
-        ArrayList<Entity> symbolicBalls = (ArrayList<Entity>) gameWorld.getEntitiesByType(GameFatory.Types.SYMBOLIC_BALL);
-        for(Entity symbolicBall : symbolicBalls){
-            symbolicBall.removeFromWorld();
-        }
-        ArrayList<Entity> balls = (ArrayList<Entity>) gameWorld.getEntitiesByType(GameFatory.Types.BALL);
-        for(Entity ball : balls){
-            ball.removeFromWorld();
-        }
-        ArrayList<Entity> bricks = (ArrayList<Entity>) gameWorld.getEntitiesByType(GameFatory.Types.BRICK);
-        for(Entity brick : bricks){
-            brick.removeFromWorld();
-        }
-        ArrayList<Entity> wallss = (ArrayList<Entity>) gameWorld.getEntitiesByType(GameFatory.Types.WALL);
-        for(Entity wall : wallss){
-            wall.removeFromWorld();
-        }
-        gameWorld.getEntitiesByType(GameFatory.Types.PLAYER).get(0).removeFromWorld();
-
-        getGame().setFacade(new HomeworkTwoFacade());   // Reset logic
+        // Delete Old Entities
+        getGame().getGameWorld().getEntitiesByType(GameFactory.Types.SYMBOLIC_BALL).forEach(Entity::removeFromWorld);
+        getGame().getGameWorld().getEntitiesByType(GameFactory.Types.BALL).forEach(Entity::removeFromWorld);
+        getGame().getGameWorld().getEntitiesByType(GameFactory.Types.BRICK).forEach(Entity::removeFromWorld);
+        getGame().getGameWorld().getEntitiesByType(GameFactory.Types.WALL).forEach(Entity::removeFromWorld);
+        getGame().getGameWorld().getEntitiesByType(GameFactory.Types.PLAYER).forEach(Entity::removeFromWorld);
+        // Reset counters and messages
         getGame().getGameState().setValue("total score",getGame().getFacade().getCurrentPoints());
         getGame().getGameState().setValue("level score",getGame().getFacade().getCurrentLevel().getCurrentPoints());
         getGame().getGameState().setValue("actual level","Level 0");
@@ -65,8 +47,9 @@ public class GameOver extends Playing{
         getGame().getGameState().setValue("levels to play",0);
         getGame().getGameState().setValue("popup", "");
         getGame().getGameState().setValue("restart", "");
-
-
+        // Reset logic
+        getGame().setFacade(new HomeworkTwoFacade());
+        // Add new Entities, update and go to GameNotStarted State
         Entity player = newPlayer(getGame().getWidth()/2.0 - 75,630, new EntityController());// Platform 150*30
         Entity ball = newBall(player.getX() + 70,player.getY() - 17, new EntityController());// Symbolic ball
         Entity walls = newWalls();

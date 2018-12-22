@@ -1,18 +1,13 @@
 package ui.GameStates;
 
-import com.almasb.fxgl.entity.Entity;
-import facade.HomeworkTwoFacade;
-import logic.brick.Brick;
 import ui.App;
-import ui.EntityController;
-import ui.GameFatory;
 
-import java.util.List;
-import java.util.Random;
-
-import static ui.GameFatory.linkBricks;
-import static ui.GameFatory.newBall;
-
+/**
+ * Corresponde al estado secundario de juego: Al haber perdido una bola, se pone una nueva bola encima y se dispara con SPACE
+ * Básicamente se implementa para que la bola siga a la plataforma. Al lanzar la bola se pasa a un nuevo estado.
+ *
+ * @author Maximiliano Vargas
+ */
 public class StandBy extends Playing {
 
     public StandBy(App game){

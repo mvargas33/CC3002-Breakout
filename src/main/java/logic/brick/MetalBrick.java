@@ -27,7 +27,7 @@ public class MetalBrick extends AbstractBrick{
     }
 
     /**
-     * Retorna true
+     * Retorna true, de utilidad para interfaz gráfica
      * @return  true
      */
     @Override

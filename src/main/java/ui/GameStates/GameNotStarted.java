@@ -1,19 +1,16 @@
 package ui.GameStates;
 
-import com.almasb.fxgl.app.GameApplication;
-import com.almasb.fxgl.entity.Entity;
-import facade.HomeworkTwoFacade;
-import logic.brick.Brick;
-import ui.App;
-import ui.EntityController;
-import ui.GameFatory;
-
-import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
-import static ui.GameFatory.linkBricks;
+import ui.App;
+import static ui.GameFactory.linkBricks;
 
+/**
+ * Estado base del juego, con el nivel vacío. Sólo se puede pasar al estado de StandBy si se preciona la tecla N.
+ * SPACE no hace lanzar la bola, debe haber al menos un nivel antes.
+ *
+ * @author Maximiliano Vargas
+ */
 public class GameNotStarted extends StandBy{
 
     public GameNotStarted(App game){

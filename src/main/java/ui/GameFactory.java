@@ -2,7 +2,6 @@ package ui;
 
 import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.GameWorld;
 import com.almasb.fxgl.entity.RenderLayer;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.entity.components.SelectableComponent;
@@ -14,41 +13,21 @@ import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import logic.brick.*;
 
-import java.util.*;
 
-public final class GameFatory {
+/**
+ * Clase que fabrica Entidades de un tipo específico. Esa es su única función. Podría clasificarse dentro del Factory Pattern,
+ * sin embargo todos sus métodos son estáticos para ser llamados desde cualquier lado, principalmente de App.
+ *
+ * @author Maximiliano Vargas
+ */
+public final class GameFactory {
     public enum Types{
         PLAYER,
         BALL,
         WALL,
         BRICK,
         SYMBOLIC_BALL
-    }
-
-    public static HashMap<Entity, Brick> linkBricks(List<Brick> bricks){
-        Collections.shuffle(bricks);
-        HashMap<Entity, Brick> map = new HashMap<>();
-        int i = 0;
-        int j = 1; // Empty row at top
-        for(Brick brick : bricks){
-            if (i%10 == 0){
-                j++;i=0;
-            }
-            if(brick.isGlassBrick()){
-                Entity glassEntity = newBrick(104*i + 32, 34*j, Color.RED, "ice.png");
-                map.put(glassEntity, brick);
-            }else if(brick.isMetalBrick()){
-                Entity metalEntity = newBrick(104*i + 32, 34*j, Color.DARKGREY, "poneglyph.png");
-                map.put(metalEntity, brick);
-            }else if(brick.isWoodenBrick()){
-                Entity woodenEntity = newBrick(104*i + 32, 34*j, Color.GREENYELLOW, "fire.png");
-                map.put(woodenEntity, brick);
-            }
-            i++;
-        }
-        return map;
     }
 
     public static Entity newBrick(double x, double y, Color c, String textura){

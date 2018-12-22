@@ -4,6 +4,15 @@ import logic.brick.*;
 
 import java.util.*;
 
+/**
+ * Esta clase provee la lógica principal de los niveles. Corresponde al obeto real del Null Pattern implementado para
+ * los niveles. Implementa tanto la creación como administración de Bricks en un nivel dado. Es parte de una lista de niveles.
+ * Se utilizó Oberver Pattern para recibir mensajes de Bricks destruidos. * Además se utilizó Visitor Pattern para la suma
+ * de puntos cada vez que un Brick es destruido. Por otro lado, Level envía mensajes a Game, el controlador, para
+ * pasar de nivel, sumar puntos o añadir bolas al juego.
+ *
+ * @author Maximiliano Vargas
+ */
 public class RealLevel extends Observable implements Level {
     private int obtainablePoins;            // Puntos máximos obtenidobles (destuir wooden, glass)
     private int currentPonts;               // Puntos actuales ganados
@@ -12,6 +21,9 @@ public class RealLevel extends Observable implements Level {
     private Level nextLevel;                // Nivel siguiente
     private boolean lastBrickWasMetal;      // Valor booleano: Dice si el último Brick destuido fue de metal (necesario para el notify level->game)
 
+    /**
+     * Constructor base, se utiliza para inicializar variables de un nivel real
+     */
     public RealLevel(){
         this.obtainablePoins = 0;
         this.currentPonts = 0;
@@ -19,6 +31,7 @@ public class RealLevel extends Observable implements Level {
         this. levelBricks = new ArrayList<>();
         this.lastBrickWasMetal = false;
     }
+
     /**
      * Constructor de un RealLevel. Crea un nivl con GlassBrick, MetalBrick y WoodenBrick basado en probabilidades.
      * 'numberOfBricks' especifica los bricks entre wood y glass. Los bricks de metal se agregan como extra.
@@ -253,6 +266,11 @@ public class RealLevel extends Observable implements Level {
         this.nextLevel = level;
     }
 
+    /**
+     * Utilizado para añadir un Observer a la lista de observers del nivel. Se crea para evitar conflictos con NullLevel
+     *
+     * @param o : Observer a agregar
+     */
     @Override
     public void addRealObserver(Observer o) {
         this.addObserver(o);

@@ -8,9 +8,10 @@ import logic.level.RealLevel;
 import java.util.List;
 
 /**
- * Facade class to expose the logic of the game to a GUI in the upcoming homework.
+ * Clase facade que bajo simples métodos oculta la lógica más compleja detrás del juego.
+ * Útil para la implementación en la interfaz gráfica.
  *
- * @author Juan-Pablo Silva
+ * @author Maximiliano Vargas
  */
 public class HomeworkTwoFacade {
     /**
@@ -18,7 +19,7 @@ public class HomeworkTwoFacade {
      *
      * @see Game
      */
-    public Game game = new Game(30);
+    public Game game = new Game(3);
 
     /**
      * Creates a new level with the given parameters.
@@ -184,18 +185,4 @@ public class HomeworkTwoFacade {
     public boolean winner() {
         return game.winner();
     }
-
-    public int numberOfLevels(){
-        int n = 0;
-        Level l = getCurrentLevel();
-        if(l.isPlayableLevel()){
-            n++;
-        }
-        while(l.hasNextLevel()){
-            n++;
-            l = l.getNextLevel();
-        }
-        return n;
-    }
-
 }

@@ -1,14 +1,8 @@
 package logic.level;
 
-import logic.brick.Brick;
-import logic.brick.GlassBrick;
-import logic.brick.MetalBrick;
-import logic.brick.WoodenBrick;
+import logic.brick.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 /**
  * Clase NullLevel. Corresponde con los valores default 'nulos' de un Nivel vacío.

@@ -4,19 +4,20 @@ import java.util.Observable;
 
 /**
  * Clase abstracta de Bricks, contiene métodos comunes entre los distintos tipos de Bricks
- * y un constructor abstracto en comnún.I mplementa los métodos declarados en la clase abstracta Brick.
+ * y un constructor abstracto en comnún. Implementa los métodos declarados en la clase abstracta Brick.
  * Los bricks extienden de Observable, son observados por niveles, utilizan los métodos de Observable.
  * Esto corresponde al 'Observer Pattern' visto en clases.
  *
  * @author Maximiliano Vargas
  */
 public abstract class AbstractBrick extends Observable implements Brick {
-    private int lives;
-    private int score;
-    private boolean isAlive;
+    private int lives;          // Vidas
+    private int score;          // Score
+    private boolean isAlive;    // Está vivo?
 
     /**
      * Constructor: Crea un brick abstracto con una cantidad de vida y puntos entregados
+     *
      * @param lives: Vidas del Brick
      * @param points: Score que da el Brcik al ser destruido
      */

@@ -1,7 +1,6 @@
 package ui;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.GameWorld;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
@@ -17,15 +16,25 @@ import ui.GameStates.*;
 
 import java.util.*;
 
-import static ui.GameFatory.*;
+import static ui.GameFactory.*;
 
+/**
+ * Clase principal del juego. Se debe ejecutar el main de esta clase para iniciar el Juego.
+ * Se encarga de incializar la visualización en ventana, colocar entidades gráficas y correr los textos y contadores del juego.
+ * Además contiene todos los Handlers de las acciones introducidas por el jugador, que básicamente es el accionamiento de teclas.
+ * Relaciona la lógica del juego con la interfaz gráfica implementada. Su funcionamiento implementa el Factory Pattern para la
+ * creación de entidades gráficas. El Facade Pattern para la interacción con la lógica del juego. Y el State Pattern, para
+ * la administración de los distintos estados del juego (basado en el accionamiento de teclas).
+ *
+ * @author Maximiliano Vargas
+ */
 public class App extends GameApplication {
     private int width = 1100;
     private int heigth = 700;
     private int nivelNumero = 1;
-    private HashMap<Entity, Brick> actualLevelBricks;
-    private HomeworkTwoFacade facade;
-    private State gameState;
+    private HashMap<Entity, Brick> actualLevelBricks;   // Bind de Bricks lógicos con Bricks gráficos
+    private HomeworkTwoFacade facade;                   // Lógica del juego
+    private State gameState;                            // Estado del juego
 
     public int getAppWidth(){
         return width;
@@ -68,7 +77,42 @@ public class App extends GameApplication {
         launch(args);
     }
 
-    public void hitUIBrick(Entity UIBrick){
+    /**
+     * Recibe una lista Bricks lógicos y retorna un Bind con Bricks gráficos en forma de HashMap
+     *
+     * @param bricks Bricks lógicos
+     * @return  HashMap de BricksGráficos,BricksLógicos
+     */
+    public static HashMap<Entity, Brick> linkBricks(List<Brick> bricks){
+        Collections.shuffle(bricks);
+        HashMap<Entity, Brick> map = new HashMap<>();
+        int i = 0;
+        int j = 1; // Empty row at top
+        for(Brick brick : bricks){
+            if (i%10 == 0){
+                j++;i=0;
+            }
+            if(brick.isGlassBrick()){
+                Entity glassEntity = newBrick(104*i + 32, 34*j, Color.RED, "ice.png");
+                map.put(glassEntity, brick);
+            }else if(brick.isMetalBrick()){
+                Entity metalEntity = newBrick(104*i + 32, 34*j, Color.DARKGREY, "poneglyph.png");
+                map.put(metalEntity, brick);
+            }else if(brick.isWoodenBrick()){
+                Entity woodenEntity = newBrick(104*i + 32, 34*j, Color.GREENYELLOW, "fire.png");
+                map.put(woodenEntity, brick);
+            }
+            i++;
+        }
+        return map;
+    }
+
+    /**
+     * Realiza todas las acciones lógicas y gráficas para golpear a un Brick
+     *
+     * @param UIBrick Brick gráfico a golpear
+     */
+    private void hitUIBrick(Entity UIBrick){
         Brick b = actualLevelBricks.get(UIBrick);
         b.hit();
         if(b.isDestroyed()){
@@ -82,7 +126,7 @@ public class App extends GameApplication {
                 getGameState().increment("levels to play", -1);
                 gameState.winGame();
             }else if(facade.getCurrentLevel().getCurrentPoints() == 0){  // Pasamos a otro nivel
-                gameState.goToNextLevel(getGameWorld().getEntitiesByType(GameFatory.Types.BALL).get(0));
+                gameState.goToNextLevel(getGameWorld().getEntitiesByType(GameFactory.Types.BALL).get(0));
                 getGameState().increment("won levels", +1);
                 getGameState().increment("levels to play", -1);
                 getGameState().setValue("actual level", facade.getLevelName());
@@ -108,6 +152,29 @@ public class App extends GameApplication {
         }else if(b.isGlassBrick()){
             getAudioPlayer().playSound("glass.wav");
         }
+    }
+
+    /**
+     * Hace update de la visualización de vidas en forma gráfica. Feature menor
+     *
+     * @param cuantity Cantidad de vidas a setear
+     * @param width Ancho de la pantalla
+     */
+    public void updateBalls(int cuantity, int width){
+        getGameWorld().getEntitiesByType(Types.SYMBOLIC_BALL).forEach(Entity::removeFromWorld);
+        int i = 0;
+        int j = -1;
+        for(int q = 0; q < cuantity; q++){
+            if(i%15 == 0){
+                j++;i=0;
+            }
+            if (j == 2){    // Sólo se pueden dibujar hasta 60 balls
+                break;
+            }
+            Entity symbolicBall = newSymbolicBall(width - 32 - 25 + 25*i, 5 + 25*j);
+            i--;
+        }
+        getGameState().setValue("lives", facade.getBallsLeft());
     }
 
     @Override
@@ -234,27 +301,6 @@ public class App extends GameApplication {
         );
 
     }
-    public void updateBalls(int cuantity, int width){
-        ArrayList<Entity> b = (ArrayList<Entity>) getGameWorld().getEntitiesByType(Types.SYMBOLIC_BALL);
-        for(Entity balll : b){
-            balll.removeFromWorld();
-        }
-
-        int i = 0;
-        int j = -1;
-        for(int q = 0; q < cuantity; q++){
-            if(i%15 == 0){
-                j++;i=0;
-            }
-            if (j == 2){    // Sólo se pueden dibujar hasta 60 balls
-                break;
-            }
-            Entity symbolicBall = newSymbolicBall(width - 32 - 25 + 25*i, 5 + 25*j);
-            i--;
-        }
-        getGameState().setValue("lives", facade.getBallsLeft());
-    }
-
 
     @Override
     protected void initGameVars(Map<String, Object> vars) {

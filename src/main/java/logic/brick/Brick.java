@@ -3,11 +3,9 @@ package logic.brick;
 import logic.visitor.Visitable;
 
 /**
- * Interface that represents a brick object.
- * <p>
- * All bricks should implement this interface.
+ * Interfaz que representa todas las acciones a implementar por un Brick.
  *
- * @author Juan-Pablo Silva
+ * @author Maximiliano Vargas
  */
 public interface Brick extends Visitable{
     /**
