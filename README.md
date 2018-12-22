@@ -18,7 +18,7 @@ R: Reiniciar el juego. Sólo accedible al ganar o perder el juego
 
 El en el directorio '/src/main/java' se encuentran todos los archivos que implementan la lógica del juego. Desde aquí se distinguen varios paquetes principales:
 
-Controller: Con su única clase 'Game', es el paquete controlador de la lógica del juego. Es un observador del nivel actual de juego y recibe notificaciones de él. Controla la cantidad de bolas y además decide cuando pasar de nivel, ganar o perder el juego. Se implementa inspirado en el 'Observer Pattern' visto en clases.
+**Strong text**Controller: Con su única clase 'Game', es el paquete controlador de la lógica del juego. Es un observador del nivel actual de juego y recibe notificaciones de él. Controla la cantidad de bolas y además decide cuando pasar de nivel, ganar o perder el juego. Se implementa inspirado en el 'Observer Pattern' visto en clases.
 
 Logic: Implementa la lógica del juego, se distinguen varios sub-paquetes:
 
