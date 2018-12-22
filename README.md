@@ -24,19 +24,19 @@ El en el directorio '/src/main/java' se encuentran todos los archivos que implem
 
 * **Brick:** Implementa el funcionamiento de los Bricks en el juego. Todos los Bricks son visitables por un Nivel. Esto para que el nivel pueda sumar puntos haciendo distinción del tipo de Brick visitado. Cuando un Brick es destruido, este envía un mensaje a Level para que lo visite y realize acciones. Se inspira en el 'Visitor Pattern' y 'Observer Pattern' Vsito en clases.
   
-&nbsp;&nbsp;**Level:** Implementa la lógica de los niveles del juego. Cada nivel tiene un nivel siguiente formando una lista enlazada de niveles. Por otro lado, un nivel es un Visitante que vistia Bricks como se mencionó anteriormente. El nivel informa al controlador Game cada vez que un cambio importante ocuure.
+* **Level:** Implementa la lógica de los niveles del juego. Cada nivel tiene un nivel siguiente formando una lista enlazada de niveles. Por otro lado, un nivel es un Visitante que vistia Bricks como se mencionó anteriormente. El nivel informa al controlador Game cada vez que un cambio importante ocuure.
 
 **Facade:** Oculta bajo sus métodos simples la lógica compleja del juego. Es utilizado en la interfaz gráfica para simplificar las cosas. Corresponde a la implementación del 'Facade Pattern'.
 
 **UI:** Implementa la interfaz gráfica del juego. Relaciona la lógica implementada con la librería de javafx. También posee sub-paquetes y clases:
   
-&nbsp;&nbsp;**GameState:** Corresponde a una implementación del 'State Pattern' para la limitación de las acciones del jugador y de las entidades. Por ejemplo, en un estado de StandBy, la pelota debe estar sobre la plataforma y seguirla. También limita para ciertos estados las acciones de las teclas, por ejemplo, sólo se puede reiniciar el juego si este está ganado o perdido.
+* **GameState:** Corresponde a una implementación del 'State Pattern' para la limitación de las acciones del jugador y de las entidades. Por ejemplo, en un estado de StandBy, la pelota debe estar sobre la plataforma y seguirla. También limita para ciertos estados las acciones de las teclas, por ejemplo, sólo se puede reiniciar el juego si este está ganado o perdido.
   
-&nbsp;&nbsp;**App:** Clase principal donde se inicial el juego. Se encarga de abrir la ventana y relacionar la lógica con la interfaz visual. Posee un estado que determina las acciones del juego. Posee handlers que están atentos al accionamiento de teclas. También se encarga de la implementación de las features del juego, y de las texturas del mismo.
+* **App:** Clase principal donde se inicial el juego. Se encarga de abrir la ventana y relacionar la lógica con la interfaz visual. Posee un estado que determina las acciones del juego. Posee handlers que están atentos al accionamiento de teclas. También se encarga de la implementación de las features del juego, y de las texturas del mismo.
   
-&nbsp;&nbsp;**EntityController:** Controlador de la física de las entidades gráficas del juego. Útil para la delegación de tareas básicas como mover a la derecha o la izquierda.
+* **EntityController:** Controlador de la física de las entidades gráficas del juego. Útil para la delegación de tareas básicas como mover a la derecha o la izquierda.
   
-&nbsp;&nbsp;**GameFactory:** Fábrica de entidades gráficas, inspirada en el 'Factory Pattern' visto en clases. Es su única función.
+* **GameFactory:** Fábrica de entidades gráficas, inspirada en el 'Factory Pattern' visto en clases. Es su única función.
 
 ## Features implementadas
 ### Mayores
