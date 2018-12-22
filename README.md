@@ -22,7 +22,7 @@ El en el directorio '/src/main/java' se encuentran todos los archivos que implem
 
 **Logic:** Implementa la lógica del juego, se distinguen varios sub-paquetes:
 
-&nbsp;&nbsp;**Brick:** Implementa el funcionamiento de los Bricks en el juego. Todos los Bricks son visitables por un Nivel. Esto para que el nivel pueda sumar puntos haciendo distinción del tipo de Brick visitado. Cuando un Brick es destruido, este envía un mensaje a Level para que lo visite y realize acciones. Se inspira en el 'Visitor Pattern' y 'Observer Pattern' Vsito en clases.
+* **Brick:** Implementa el funcionamiento de los Bricks en el juego. Todos los Bricks son visitables por un Nivel. Esto para que el nivel pueda sumar puntos haciendo distinción del tipo de Brick visitado. Cuando un Brick es destruido, este envía un mensaje a Level para que lo visite y realize acciones. Se inspira en el 'Visitor Pattern' y 'Observer Pattern' Vsito en clases.
   
 &nbsp;&nbsp;**Level:** Implementa la lógica de los niveles del juego. Cada nivel tiene un nivel siguiente formando una lista enlazada de niveles. Por otro lado, un nivel es un Visitante que vistia Bricks como se mencionó anteriormente. El nivel informa al controlador Game cada vez que un cambio importante ocuure.
 
