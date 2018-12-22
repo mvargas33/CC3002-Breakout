@@ -88,9 +88,7 @@ public class NullLevel implements Level{
      * @param points : puntos a sumar
      */
     @Override
-    public void sumToObtainablePoints(int points) {
-
-    }
+    public void sumToObtainablePoints(int points) {}
 
     /**
      * Suma a 'currentPonts' los puntos específicados.
@@ -99,9 +97,7 @@ public class NullLevel implements Level{
      * @param points : puntos a sumar
      */
     @Override
-    public void sumToCurrentPoints(int points) {
-
-    }
+    public void sumToCurrentPoints(int points) {}
 
     /**
      * Impone la lista de Bricks sobre el nivel
@@ -109,9 +105,7 @@ public class NullLevel implements Level{
      * @param listaBricks : lista de Bricks a imponer
      */
     @Override
-    public void setLevelBricks(ArrayList<Brick> listaBricks) {
-
-    }
+    public void setLevelBricks(ArrayList<Brick> listaBricks) {}
 
     /**
      * Impone el nombre a utilizar por un Nivel
@@ -119,9 +113,7 @@ public class NullLevel implements Level{
      * @param name : nombre a imponer
      */
     @Override
-    public void setName(String name) {
-
-    }
+    public void setName(String name){}
 
     /**
      * Retorna true si el último Brick destruido en el nivel fue de metal.
@@ -140,9 +132,7 @@ public class NullLevel implements Level{
      * @param valor : valor a setear 'lastBrickWasMetal'
      */
     @Override
-    public void setLastBrickWasMetal(boolean valor) {
-
-    }
+    public void setLastBrickWasMetal(boolean valor) {}
 
     /**
      * Retorna los puntos ganados en un nivel y sólo los de ese nivel.
@@ -205,9 +195,7 @@ public class NullLevel implements Level{
      * @param arg an argument passed to the <code>notifyObservers</code>
      */
     @Override
-    public void update(Observable o, Object arg) {
-
-    }
+    public void update(Observable o, Object arg) {}
 
     /**
      * Visita a un Brick tipo Glass
@@ -215,9 +203,7 @@ public class NullLevel implements Level{
      * @param b GlassBrick a visitar
      */
     @Override
-    public void visitGlassBrick(GlassBrick b) {
-
-    }
+    public void visitGlassBrick(GlassBrick b) {}
 
     /**
      * Visita a un Brick tipo Metal
@@ -225,9 +211,7 @@ public class NullLevel implements Level{
      * @param b MetalBrick a visitar
      */
     @Override
-    public void visitMetalBrick(MetalBrick b) {
-
-    }
+    public void visitMetalBrick(MetalBrick b) {}
 
     /**
      * Visita a un Brick tipo Wooden
@@ -235,7 +219,5 @@ public class NullLevel implements Level{
      * @param b WoodenBrick a visitar
      */
     @Override
-    public void visitWoodenBrick(WoodenBrick b) {
-
-    }
+    public void visitWoodenBrick(WoodenBrick b) {}
 }

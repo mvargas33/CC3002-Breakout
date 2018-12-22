@@ -58,6 +58,7 @@ public class RealLevelTest {
     @Test
     public void glassLevelTest(){
         assertEquals(100, glassLevel.getNumberOfBricks());
+        glassLevel.getBricks().forEach(b -> assertTrue(b.isGlassBrick()));
         assertEquals(50*100, (new GlassBrick().getScore())*glassLevel.getNumberOfBricks());
         assertEquals( (new GlassBrick().getScore())*glassLevel.getNumberOfBricks(), glassLevel.getPoints());
         destroyBrick(glassLevel.getBricks().get(0));
@@ -71,6 +72,7 @@ public class RealLevelTest {
     @Test
     public void woodenLevelTest(){
         assertEquals(100, woodenLevel.getNumberOfBricks());
+        woodenLevel.getBricks().forEach(b -> assertTrue(b.isWoodenBrick()));
         assertEquals(200*100, (new WoodenBrick().getScore())*woodenLevel.getNumberOfBricks());
         assertEquals( (new WoodenBrick().getScore())*woodenLevel.getNumberOfBricks(), woodenLevel.getPoints());
         destroyBrick(woodenLevel.getBricks().get(0));
@@ -84,6 +86,7 @@ public class RealLevelTest {
     @Test
     public void glassMetalLevelTest(){
         assertEquals(200, glassMetalLevel.getNumberOfBricks());
+        glassMetalLevel.getBricks().forEach(b -> assertTrue(b.isGlassBrick() || b.isMetalBrick()));
         assertEquals(50*100, 50*glassMetalLevel.getNumberOfBricks()/2);
         assertEquals(50*100, glassMetalLevel.getPoints());
         destroyBrick(glassMetalLevel.getBricks().get(0));
@@ -97,6 +100,7 @@ public class RealLevelTest {
     @Test
     public void woodenMetalLevelTest(){
         assertEquals(200, woodenMetalLevel.getNumberOfBricks());
+        woodenMetalLevel.getBricks().forEach(b -> assertTrue(b.isWoodenBrick() || b.isMetalBrick()));
         assertEquals(200*100, 200*woodenMetalLevel.getNumberOfBricks()/2);
         assertEquals(200*100, woodenMetalLevel.getPoints());
         destroyBrick(woodenMetalLevel.getBricks().get(0));
@@ -110,6 +114,7 @@ public class RealLevelTest {
     @Test
     public void glassWoodenMetalLevelTest(){
         assertEquals(200, glassWoodenMetalLevel.getNumberOfBricks());
+        glassWoodenMetalLevel.getBricks().forEach(b -> assertTrue(b.isGlassBrick() || b.isMetalBrick()|| b.isWoodenBrick()));
         assertTrue(glassWoodenMetalLevel.getPoints() >= 200*50);
         assertTrue(glassWoodenMetalLevel.getPoints() <= 200*100);
         destroyBrick(glassWoodenMetalLevel.getBricks().get(0));
