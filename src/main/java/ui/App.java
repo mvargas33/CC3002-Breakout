@@ -133,6 +133,10 @@ public class App extends GameApplication {
             }
             return;
         }
+        /**
+         * Feature mayor: Estado distinto del Brick al golpearse
+         * Feature menor: Sonido al golpe de los Bricks
+         */
         if(b.isMetalBrick()){
             if(b.remainingHits() == 7){
                 UIBrick.setViewFromTexture("poneglyph-1.png");
@@ -155,7 +159,7 @@ public class App extends GameApplication {
     }
 
     /**
-     * Hace update de la visualización de vidas en forma gráfica. Feature menor
+     * Feature menor: Hace update de la visualización de vidas en forma gráfica.
      *
      * @param cuantity Cantidad de vidas a setear
      * @param width Ancho de la pantalla
@@ -193,7 +197,9 @@ public class App extends GameApplication {
     @Override
     protected void initInput(){
         Input input = getInput();
-
+        /**
+         * Feature mayor: Romper Bricks manteniendo presionado mouse para testear ui.
+         */
         input.addAction(new UserAction("Delete brick") {
             @Override
             protected void onAction() {
